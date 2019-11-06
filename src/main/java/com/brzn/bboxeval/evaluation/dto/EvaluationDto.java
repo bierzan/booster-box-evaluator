@@ -1,13 +1,14 @@
 package com.brzn.bboxeval.evaluation.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 
-@Getter
-public class EvaluationDto {
-    private final String cardSetName;
+import java.time.LocalDate;
 
-    EvaluationDto(String cardSetName) {
-        this.cardSetName = cardSetName;
-    }
+@Getter
+@Builder
+public class EvaluationDto {
+    private final LocalDate date;
+    private final String cardSetName;
 }
 

@@ -19,7 +19,7 @@ class AcceptanceTest extends IntegrationTest implements SampleBox {
         boxFacade.add(sampleBox)
 
         when: 'I go to /evaluation/box/{setName}'
-        ResultActions getEvaluation = mockMvc.perform(get("/evaluate/box/" + sampleBox.cardSetName))
+        ResultActions getEvaluation = mockMvc.perform(get("/evaluation/box/" + sampleBox.cardSetName))
 
         then: 'I see chosen set booster box evaluation'
         getEvaluation.andExpect(status().isOk())

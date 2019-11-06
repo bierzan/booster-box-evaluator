@@ -20,7 +20,8 @@ class EvaluationController {
 
     @GetMapping("/box/{cardSetName}")
     public ResponseEntity<EvaluationDto> getBoxEvaluation(@PathVariable("cardSetCode") String cardSetName) {
-        return ResponseEntity.notFound().build();
+        EvaluationDto evaluationDto = evaluationFacade.evaluateBox(cardSetName);
+        return ResponseEntity.ok(evaluationDto);
     }
 }
 
