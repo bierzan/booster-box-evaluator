@@ -3,10 +3,7 @@ package com.brzn.bboxeval.evaluation;
 import com.brzn.bboxeval.evaluation.domain.EvaluationFacade;
 import com.brzn.bboxeval.evaluation.dto.EvaluationDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/evaluation")
@@ -18,10 +15,9 @@ class EvaluationController {
         this.evaluationFacade = evaluationFacade;
     }
 
-    @GetMapping("/box/{cardSetName}")
-    public ResponseEntity<EvaluationDto> getBoxEvaluation(@PathVariable("cardSetCode") String cardSetName) {
-        EvaluationDto evaluationDto = evaluationFacade.evaluateBox(cardSetName);
-        return ResponseEntity.ok(evaluationDto);
+    @GetMapping("/box")
+    public ResponseEntity<EvaluationDto> getLastBoxEvaluation(@RequestParam("setName") String cardSetName) {
+        return ResponseEntity.ok().body(evaluationFacade.getLast(cardSetName));
     }
 }
 

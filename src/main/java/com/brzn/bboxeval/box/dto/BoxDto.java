@@ -10,6 +10,7 @@ import java.util.HashMap;
 @Getter
 @Setter
 public class BoxDto {
-    String cardSetName;
-    HashMap boosterStructure;
+    private final long id;
+    private final String cardSetName;
+    private final HashMap boosterStructure;
 }

@@ -29,6 +29,7 @@ class Box {
         Gson gson = new Gson();
         Type boosterStructureType = new TypeToken<HashMap<String, Integer>>(){}.getType();
         return BoxDto.builder()
+                .id(id)
                 .cardSetName(cardSetName)
                 .boosterStructure(gson.fromJson(booster, boosterStructureType))
                 .build();

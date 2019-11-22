@@ -9,6 +9,7 @@ trait SampleBox {
 
     static private BoxDto createBoxDto(String cardSetName, HashMap structure) {
         return BoxDto.builder()
+                .id(1)
                 .cardSetName(cardSetName)
                 .boosterStructure(structure)
                 .build()

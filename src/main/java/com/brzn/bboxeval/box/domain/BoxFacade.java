@@ -24,4 +24,8 @@ public class BoxFacade {
         return box.dto();
     }
 
+    public BoxDto get(String cardSetName){
+        return boxRepository.findBySetName(cardSetName).dto();
+    }
+
 }
