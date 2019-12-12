@@ -2,6 +2,7 @@ package com.brzn.bboxeval.evaluation.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -13,7 +14,6 @@ public class EvaluationDto {
     private long id;
     private LocalDate date;
     private long cardSetId;
-
-
+    private BigDecimal avgValue;
 }
 

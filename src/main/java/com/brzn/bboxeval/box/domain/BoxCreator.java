@@ -12,6 +12,7 @@ class BoxCreator {
                 .id(boxDto.getId())
                 .cardSetName(boxDto.getCardSetName())
                 .booster(gson.toJson(boxDto.getBoosterStructure()))
+                .releaseDate(boxDto.getReleaseDate())
                 .build();
     }
 

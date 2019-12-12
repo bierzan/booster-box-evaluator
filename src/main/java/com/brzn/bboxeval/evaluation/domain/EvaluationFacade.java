@@ -26,4 +26,8 @@ public class EvaluationFacade {
     public EvaluationDto getLast(String cardSetName) {
         return service.getLast(cardSetName);
     }
+
+    public EvaluationDto calculate(String cardSetName) {
+        return service.calculate(cardSetName);
+    }
 }

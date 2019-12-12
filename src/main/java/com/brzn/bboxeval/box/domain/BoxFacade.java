@@ -1,31 +1,42 @@
 package com.brzn.bboxeval.box.domain;
 
 import com.brzn.bboxeval.box.dto.BoxDto;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.transaction.Transactional;
-import java.util.Objects;
 
 @Transactional
 @Slf4j
 public class BoxFacade {
-    private BoxRepository boxRepository;
-    private BoxCreator boxCreator;
+    private BoxRepository repository;
+    private BoxCreator creator;
+    private BoxService service;
 
-    public BoxFacade(BoxRepository boxRepository, BoxCreator boxCreator) {
-        this.boxRepository = boxRepository;
-        this.boxCreator = boxCreator;
+    BoxFacade(BoxRepository repository, BoxCreator creator, BoxService service) {
+        this.repository = repository;
+        this.creator = creator;
+        this.service = service;
     }
 
     public BoxDto add(BoxDto boxDto) {
-        Objects.requireNonNull(boxDto);
-        Box box = boxCreator.from(boxDto);
-        boxRepository.save(box);
-        return box.dto();
+        Option<Box> boxOpt = Option.of(boxDto)
+                .map(dto -> creator.from(boxDto))
+                .peek(box-> repository.save(box));
+        return boxOpt.getOrElse(Box.blank()).dto();
     }
 
-    public BoxDto get(String cardSetName){
-        return boxRepository.findBySetName(cardSetName).dto();
+    public BoxDto findLast() {
+        return repository.findLast().dto();
     }
 
+    public BoxDto get(String cardSetName) {
+        return repository.findBySetName(cardSetName).dto();
+    }
+
+    public List<BoxDto> searchNew() {
+        return service.searchNew();
+    }
 }
+

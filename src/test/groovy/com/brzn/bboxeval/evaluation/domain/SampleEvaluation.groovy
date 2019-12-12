@@ -8,10 +8,11 @@ import java.time.LocalDate
 
 @CompileStatic
 trait SampleEvaluation {
-    EvaluationDto sampleEvaluation = createEvaluationDto(LocalDate.now().minusDays(2));
+    EvaluationDto sampleEvaluation = createEvaluationDto(LocalDate.MIN, BigDecimal.ONE);
 
-    static private EvaluationDto createEvaluationDto(LocalDate date) {
+    static private EvaluationDto createEvaluationDto(LocalDate date, BigDecimal avgValue) {
         return EvaluationDto.builder()
+                .avgValue(avgValue)
                 .date(date)
                 .build();
     }

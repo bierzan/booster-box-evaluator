@@ -1,16 +1,18 @@
 package com.brzn.bboxeval.box.dto;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Value;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 
 @Builder
-@Getter
-@Setter
+@Value
 public class BoxDto {
     private final long id;
     private final String cardSetName;
     private final HashMap boosterStructure;
+    private LocalDate releaseDate;
+
+
 }

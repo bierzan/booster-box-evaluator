@@ -3,6 +3,7 @@ package com.brzn.bboxeval.evaluation.domain;
 import org.springframework.stereotype.Repository;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,7 +19,7 @@ class InMemoryEvaluationRepository implements EvaluationRepository {
 
     @Override
     public Optional<Evaluation> findLastBySetId(long setId) {
-        return  map.values().stream()
+        return map.values().stream()
                 .filter(evaluation -> setId == evaluation.getCardSetId())
                 .max(Comparator.comparing(Evaluation::getDate));
     }

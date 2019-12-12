@@ -1,26 +1,30 @@
 package com.brzn.bboxeval.box.domain;
 
 import com.brzn.bboxeval.box.exception.BoxNotFoundException;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.Map;
 import org.springframework.stereotype.Repository;
-
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 class InMemoryBoxRepository implements BoxRepository {
-    private ConcurrentHashMap<String, Box> map = new ConcurrentHashMap<>();
+    private Map<String, Box> map = HashMap.empty();
 
     @Override
     public Box save(Box box) {
-        map.put(box.getCardSetName(), box);
+        map = map.put(box.getCardSetName(), box);
         return box;
     }
 
     @Override
     public Box findBySetName(String cardSetName) {
-        Box box = map.get(cardSetName);
-        if(Objects.isNull(box))
-                throw new BoxNotFoundException(cardSetName);
-        return box;
+        return null;
+    }
+
+    @Override
+    public Box findLast() {
+        return map
+                .values()
+                .maxBy(Box::getReleaseDate)
+                .getOrElseThrow(BoxNotFoundException::new);
     }
 }

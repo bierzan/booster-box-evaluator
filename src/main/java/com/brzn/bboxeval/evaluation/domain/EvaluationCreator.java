@@ -9,6 +9,7 @@ class EvaluationCreator {
                 .id(evaluationDto.getId())
                 .cardSetId(evaluationDto.getCardSetId())
                 .date(evaluationDto.getDate())
+                .avgValue(evaluationDto.getAvgValue())
                 .build();
     }
 

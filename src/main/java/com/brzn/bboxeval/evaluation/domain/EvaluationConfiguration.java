@@ -18,9 +18,9 @@ class EvaluationConfiguration {
     }
 
     @Bean
-    EvaluationFacade evaluationFacade(EvaluationRepository evaluationRepository, BoxFacade boxFacade) {
-        EvaluationService evaluationService = new EvaluationService(evaluationRepository, boxFacade);
-        EvaluationCreator evaluationCreator = new EvaluationCreator();
-        return new EvaluationFacade(evaluationService, evaluationCreator, evaluationRepository);
+    EvaluationFacade evaluationFacade(EvaluationRepository repository, BoxFacade boxFacade) {
+        EvaluationCreator creator = new EvaluationCreator();
+        EvaluationService service = new EvaluationService(repository, boxFacade, new EvaluationCalculator());
+        return new EvaluationFacade(service, creator, repository);
     }
 }

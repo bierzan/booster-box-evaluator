@@ -12,9 +12,10 @@ class BoxConfiguration {
 
 
     @Bean
-    BoxFacade boxFacade(BoxRepository boxRepository) {
-        BoxCreator boxCreator = new BoxCreator();
-        return new BoxFacade(boxRepository, boxCreator);
+    BoxFacade boxFacade(BoxRepository repository) {
+        BoxCreator creator = new BoxCreator();
+        BoxService service = new BoxService(repository);
+        return new BoxFacade(repository, creator, service);
     }
 }
 

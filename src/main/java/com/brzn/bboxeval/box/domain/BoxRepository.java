@@ -7,4 +7,6 @@ interface BoxRepository extends Repository<Box, Long> {
     Box save(Box box);
 
     Box findBySetName(String cardSetName);
+
+    Box findLast();
 }

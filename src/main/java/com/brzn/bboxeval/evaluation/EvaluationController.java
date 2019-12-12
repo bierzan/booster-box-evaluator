@@ -19,5 +19,10 @@ class EvaluationController {
     public ResponseEntity<EvaluationDto> getLastBoxEvaluation(@RequestParam("setName") String cardSetName) {
         return ResponseEntity.ok().body(evaluationFacade.getLast(cardSetName));
     }
+
+    @PostMapping("/calculate/box")
+    public ResponseEntity<EvaluationDto> calculateBoxEvaluation(@RequestParam("setName") String cardSetName) {
+        return ResponseEntity.ok().body(evaluationFacade.calculate(cardSetName));
+    }
 }
 
