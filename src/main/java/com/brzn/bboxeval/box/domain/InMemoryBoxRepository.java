@@ -1,9 +1,10 @@
 package com.brzn.bboxeval.box.domain;
 
-import com.brzn.bboxeval.box.exception.BoxNotFoundException;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
 
 @Repository
 class InMemoryBoxRepository implements BoxRepository {
@@ -25,6 +26,8 @@ class InMemoryBoxRepository implements BoxRepository {
         return map
                 .values()
                 .maxBy(Box::getReleaseDate)
-                .getOrElseThrow(BoxNotFoundException::new);
+                .getOrElse(Box.builder()
+                        .releaseDate(LocalDate.MIN)
+                        .build());
     }
 }
