@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.transaction.Transactional;
 
+import static io.vavr.collection.List.empty;
+
 @Transactional
 @Slf4j
 public class BoxFacade {
@@ -24,14 +26,14 @@ public class BoxFacade {
     public BoxDto add(BoxDto boxDto) {
         Option<Box> boxOpt = Option.of(boxDto)
                 .map(dto -> creator.from(boxDto))
-                .peek(box-> repository.save(box));
+                .peek(box -> repository.save(box));
         return boxOpt.getOrElse(Box.blank()).dto();
     }
 
     public BoxDto findLast() {
         return repository.findLast()
                 .map(Box::dto)
-                .getOrElseThrow(()->new BoxNotFoundException("Box with releaseDate not found"));
+                .getOrElseThrow(() -> new BoxNotFoundException("Box with releaseDate not found"));
     }
 
     public BoxDto get(String cardSetName) {
@@ -40,6 +42,12 @@ public class BoxFacade {
 
     public List<BoxDto> searchNew() {
         return service.searchNew();
+    }
+
+    public List<BoxDto> add(List<BoxDto> boxes) {
+        List<BoxDto> boxDtos = empty();
+        boxes.forEach((boxDto -> boxDtos.append(add(boxDto))));
+        return boxDtos;
     }
 }
 

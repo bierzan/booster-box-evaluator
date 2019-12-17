@@ -4,9 +4,7 @@ import com.brzn.box_eval.box.domain.BoxFacade
 import com.brzn.box_eval.box.domain.SampleBoxes
 import com.brzn.box_eval.evaluation.domain.EvaluationFacade
 import com.brzn.box_eval.evaluation.domain.SampleEvaluation
-import com.brzn.box_eval.mtgIOclient.domain.SampleSets
 import com.brzn.box_eval.mtg_io_client.domain.MtgIOClient
-import com.brzn.box_eval.scryfall_client.domain.SampleCards
 import com.brzn.box_eval.scryfall_client.domain.ScryfallClient
 import com.jayway.jsonpath.JsonPath
 import io.vavr.collection.List
@@ -16,7 +14,7 @@ import org.springframework.test.web.servlet.ResultActions
 
 import java.time.LocalDate
 
-class AcceptanceTest extends IntegrationTest implements SampleBoxes, SampleEvaluation, SampleSets, SampleCards {
+class AcceptanceTest extends IntegrationTest implements SampleBoxes, SampleEvaluation {
 
     @Autowired
     BoxFacade boxFacade
@@ -30,8 +28,9 @@ class AcceptanceTest extends IntegrationTest implements SampleBoxes, SampleEvalu
 
     def "should get evaluation for recently released Box"() {
 
-        given: 'inventory with OldBox'
+        given: 'inventory with OldBox and newBoxes recieved from external Api'
         boxFacade.add(oldBox);
+        def newBoxes = [lastWeekBox, todaysBox] as List;
 
         when: 'I invoke findLast'
         def lastBox = boxFacade.findLast()
@@ -39,11 +38,12 @@ class AcceptanceTest extends IntegrationTest implements SampleBoxes, SampleEvalu
         then: 'I see OldBox'
         lastBox == oldBox;
 
-        when: 'I invoke searchNew and got 2 new Boxes from external source'
-        newBoxes == [lastWeekBox, todaysBox] as List;
+        when: 'I save newBoxes and invoke findLast'
+        boxFacade.add(newBoxes)
+        def newLastBox = boxFacade.findLast();
 
-        then: 'I see that NewBoxes were found'
-        //todo test do poprawyt
+        then: 'I see that todayBox is now the last one'
+        newLastBox == todaysBox;
     }
 
 //    def "should get last evaluation"() {
