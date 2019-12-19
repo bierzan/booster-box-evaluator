@@ -41,7 +41,7 @@ public class BoxFacade {
     }
 
     public List<BoxDto> searchNew() {
-        return service.searchNew();
+        return service.searchForNew();
     }
 
     public List<BoxDto> add(List<BoxDto> boxes) {

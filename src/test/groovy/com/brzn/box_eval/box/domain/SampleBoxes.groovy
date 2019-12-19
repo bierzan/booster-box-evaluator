@@ -13,17 +13,17 @@ trait SampleBoxes {
             .build();
 
     BoxDto oldBox = BoxDto.builder()
-            .cardSetName("OldBox")
+            .cardSetName("oldSet")
             .releaseDate(LocalDate.MIN)
             .build();
 
     BoxDto lastWeekBox = BoxDto.builder()
-            .cardSetName("lastWeekBox")
+            .cardSetName("lastWeekSet")
             .releaseDate(LocalDate.now().minusWeeks(1))
             .build();
 
     BoxDto todaysBox = BoxDto.builder()
-            .cardSetName("TodaysBox")
+            .cardSetName("todaySet")
             .releaseDate(LocalDate.now())
             .build();
 

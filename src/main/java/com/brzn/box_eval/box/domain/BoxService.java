@@ -27,7 +27,7 @@ class BoxService {
         this.scryfallClient = scryfallClient;
     }
 
-    List<BoxDto> searchNew() {
+    List<BoxDto> searchForNew() {
         return repository.findLast()
                 .map(Box::getReleaseDate)
                 .map(this::searchBoxesReleasedAfter)
