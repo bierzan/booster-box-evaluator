@@ -16,8 +16,9 @@ class InMemoryBoxRepository implements BoxRepository {
     }
 
     @Override
-    public Box findBySetName(String cardSetName) {
-        return null;
+    public Option<Box> findBySetName(String cardSetName) { //todo zmienic na id
+        Option<Box> box = map.get(cardSetName);
+        return box;
     }
 
     @Override

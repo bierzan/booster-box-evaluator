@@ -37,7 +37,9 @@ public class BoxFacade {
     }
 
     public BoxDto get(String cardSetName) {
-        return repository.findBySetName(cardSetName).dto();
+        return repository.findBySetName(cardSetName)
+                .getOrElseThrow(() -> new BoxNotFoundException("Box with cardSetName: %s not found"))
+                .dto();
     }
 
     public List<BoxDto> searchNew() {

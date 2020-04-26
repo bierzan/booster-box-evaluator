@@ -2,11 +2,9 @@ package com.brzn.box_eval.box.domain;
 
 import com.brzn.box_eval.box.dto.BoxDto;
 import com.brzn.box_eval.mtg_io_client.domain.MtgIOClient;
-import com.brzn.box_eval.mtg_io_client.dto.CardSet;
 import com.brzn.box_eval.scryfall_client.domain.ScryfallClient;
 import com.brzn.box_eval.scryfall_client.dto.Card;
 import io.vavr.collection.List;
-import io.vavr.control.Option;
 
 import java.time.LocalDate;
 
@@ -27,25 +25,21 @@ class BoxService {
         this.scryfallClient = scryfallClient;
     }
 
-    List<BoxDto> searchForNew() {
+    List<BoxDto> searchForNew() { //todo test czy bedzie pusta lista jesli repo nie odpowie lub nie znajdzie
         return repository.findLast()
                 .map(Box::getReleaseDate)
                 .map(this::searchBoxesReleasedAfter)
-                .orElse(() -> Option.of(searchBoxesReleasedAfter(LocalDate.MIN)))
-                .get();
+                .getOrElse(() -> searchBoxesReleasedAfter(LocalDate.MIN));
     }
 
-    private List<BoxDto> searchBoxesReleasedAfter(LocalDate lastReleaseDate) {
+    private List<BoxDto> searchBoxesReleasedAfter(LocalDate lastReleaseDate) { //todo test na to jak scryfall lub mtgIO nie odpowiadaja
         return scryfallClient.findCardsReleasedAfter(lastReleaseDate)
                 .map(Card::getSetCode)
                 .distinct()
                 .transform(codes -> mtgIOClient.findSetsByCodes(codes))
-                .map(this::prepareBoxDto);
+                .map(cardSet -> creator.from(cardSet).dto());
 
     }
 
-    private BoxDto prepareBoxDto(CardSet cardSet) {
-        return creator.from(cardSet).dto();
-    }
 }
 

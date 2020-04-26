@@ -17,7 +17,7 @@ public class EvaluationFacade {
     private EvaluationRepository repository;
 
     public EvaluationDto add(EvaluationDto evaluationDto){
-        Objects.requireNonNull(evaluationDto);
+        Objects.requireNonNull(evaluationDto); //todo zmienic na validate z komunikatem
         Evaluation evaluation = creator.from(evaluationDto);
         repository.save(evaluation);
         return evaluation.dto();

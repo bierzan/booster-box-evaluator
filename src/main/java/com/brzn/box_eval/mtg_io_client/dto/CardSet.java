@@ -14,5 +14,7 @@ public class CardSet {
     private final String name;
     private final String booster;
     private final LocalDate releaseDate;
+    private final CardSetType type;
+    private final String block;
 }
 //todo deserializer + sprawdzenie czy mapuje arraye

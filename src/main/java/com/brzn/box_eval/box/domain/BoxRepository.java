@@ -7,7 +7,7 @@ import org.springframework.data.repository.Repository;
 interface BoxRepository extends Repository<Box, Long> {
     Box save(Box box);
 
-    Box findBySetName(String cardSetName);
+    Option<Box> findBySetName(String cardSetName);
 
     Option<Box> findLast();
 }

@@ -4,6 +4,7 @@ import com.brzn.box_eval.mtgIOclient.domain.SampleSets
 import com.brzn.box_eval.mtg_io_client.domain.MtgIOClient
 import com.brzn.box_eval.scryfall_client.domain.SampleCards
 import com.brzn.box_eval.scryfall_client.domain.ScryfallClient
+import com.brzn.box_eval.scryfall_client.dto.Card
 import io.vavr.collection.List
 import io.vavr.control.Option
 import spock.lang.Specification
@@ -17,7 +18,7 @@ class SearchForNewTest extends Specification implements SampleBoxes, SampleSets,
     def scryfallClient = Mock(ScryfallClient)
     def service = new BoxService(repository, creator, mtgIOClient, scryfallClient);
 
-    def "searcForhNew with oldBox in inventory"() {
+    def "searchForhNew with oldBox in inventory"() {
         given: 'Inventory with oldBox and recent sets data provided by external MtG websites'
         repository.findLast() >> Option.of(creator.from(oldBox));
         scryfallClient.findCardsReleasedAfter(_ as LocalDate) >> List.of(todayCard, lastWeekCard, lastWeekCard);
@@ -54,6 +55,26 @@ class SearchForNewTest extends Specification implements SampleBoxes, SampleSets,
 
         then: 'I get list of today and lastWeek Boxes'
         newBoxes.each { assert it.cardSetName == todaysBox.cardSetName || it.cardSetName == lastWeekBox.cardSetName }
+    }
+
+    @Override
+    Card getTodayCard() {
+        return SampleCards.super.getTodayCard()
+    }
+
+    @Override
+    void setTodayCard(Card todayCard) {
+        SampleCards.super.setTodayCard(todayCard)
+    }
+
+    @Override
+    Card getLastWeekCard() {
+        return SampleCards.super.getLastWeekCard()
+    }
+
+    @Override
+    void setLastWeekCard(Card lastWeekCard) {
+        SampleCards.super.setLastWeekCard(lastWeekCard)
     }
 }
 //todo !! Box creator test w kontekscie boostera
