@@ -2,6 +2,7 @@ package com.brzn.box_eval
 
 import com.brzn.box_eval.box.domain.BoxFacade
 import com.brzn.box_eval.box.domain.SampleBoxes
+import com.brzn.box_eval.box.dto.BoxDto
 import com.brzn.box_eval.evaluation.domain.EvaluationFacade
 import com.brzn.box_eval.evaluation.domain.SampleEvaluation
 import com.brzn.box_eval.mtg_io_client.domain.MtgIOClient
@@ -32,7 +33,7 @@ class AcceptanceTest extends IntegrationTest implements SampleBoxes, SampleEvalu
 
         given: 'inventory with OldBox and recentBoxes recieved from external Api'
         boxFacade.add(oldBox);
-        def recentBoxes = [lastWeekBox, todaysBox] as List;
+        List<BoxDto> recentBoxes = List.of(lastWeekBox, todaysBox);
 
         when: 'I invoke findLast'
         def lastBox = boxFacade.findLast()
@@ -41,7 +42,7 @@ class AcceptanceTest extends IntegrationTest implements SampleBoxes, SampleEvalu
         lastBox == oldBox;
 
         when: 'I save recently released Boxes and invoke findLast'
-        boxFacade.add(recentBoxes)
+        boxFacade.addMany(recentBoxes)
         def newLastBox = boxFacade.findLast();
 
         then: 'I see that todayBox is now the last one'

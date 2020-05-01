@@ -20,12 +20,11 @@ class BoxConfiguration {
         return boxFacade(new InMemoryBoxRepository());
     }
 
-
     @Bean
     BoxFacade boxFacade(BoxRepository repository) {
         BoxCreator creator = new BoxCreator();
-        BoxService service = new BoxService(repository, creator, mtgIOClient, scryfallClient);
-        return new BoxFacade(repository, creator, service);
+        BoxCommand command = new BoxCommand(creator, repository);
+        return new BoxFacade(command, repository);
     }
 }
 

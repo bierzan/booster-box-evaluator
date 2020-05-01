@@ -3,31 +3,23 @@ package com.brzn.box_eval.box.domain;
 import com.brzn.box_eval.box.dto.BoxDto;
 import com.brzn.box_eval.box.exception.BoxNotFoundException;
 import io.vavr.collection.List;
-import io.vavr.control.Option;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.transaction.Transactional;
 
-import static io.vavr.collection.List.empty;
-
 @Transactional
 @Slf4j
 public class BoxFacade {
-    private BoxRepository repository;
-    private BoxCreator creator;
-    private BoxService service;
+    private final BoxCommand command;
+    private final BoxRepository repository;
 
-    BoxFacade(BoxRepository repository, BoxCreator creator, BoxService service) {
+    public BoxFacade(BoxCommand command, BoxRepository repository) {
+        this.command = command;
         this.repository = repository;
-        this.creator = creator;
-        this.service = service;
     }
 
-    public BoxDto add(BoxDto boxDto) {
-        Option<Box> boxOpt = Option.of(boxDto)
-                .map(dto -> creator.from(boxDto))
-                .peek(box -> repository.save(box));
-        return boxOpt.getOrElse(Box.blank()).dto();
+    public BoxDto add(BoxDto boxDto) { //todo unit test
+        return command.add(boxDto);
     }
 
     public BoxDto findLast() {
@@ -38,18 +30,12 @@ public class BoxFacade {
 
     public BoxDto get(String cardSetName) {
         return repository.findBySetName(cardSetName)
-                .getOrElseThrow(() -> new BoxNotFoundException("Box with cardSetName: %s not found"))
+                .getOrElseThrow(() -> new BoxNotFoundException(cardSetName))
                 .dto();
     }
 
-    public List<BoxDto> searchNew() {
-        return service.searchForNew();
-    }
-
-    public List<BoxDto> add(List<BoxDto> boxes) {
-        List<BoxDto> boxDtos = empty();
-        boxes.forEach((boxDto -> boxDtos.append(add(boxDto))));
-        return boxDtos;
+    public List<BoxDto> addMany(List<BoxDto> boxes) {
+        return command.addMany(boxes);
     }
 }
 

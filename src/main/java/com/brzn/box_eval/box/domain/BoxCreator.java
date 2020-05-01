@@ -5,7 +5,7 @@ import com.brzn.box_eval.mtg_io_client.dto.CardSet;
 import com.brzn.box_eval.mtg_io_client.dto.CardSetType;
 import com.google.gson.Gson;
 
-class BoxCreator<detailMessage> {
+class BoxCreator {
 
     private Gson gson = new Gson();
 
