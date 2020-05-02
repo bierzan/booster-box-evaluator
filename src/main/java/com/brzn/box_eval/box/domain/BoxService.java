@@ -1,8 +1,8 @@
 package com.brzn.box_eval.box.domain;
 
 import com.brzn.box_eval.box.dto.BoxDto;
-import com.brzn.box_eval.mtg_io_client.domain.MtgIOClient;
-import com.brzn.box_eval.scryfall_client.domain.ScryfallClient;
+import com.brzn.box_eval.mtg_io_client.MtgIOClient;
+import com.brzn.box_eval.scryfall_client.ScryfallClient;
 import com.brzn.box_eval.scryfall_client.dto.Card;
 import io.vavr.collection.List;
 

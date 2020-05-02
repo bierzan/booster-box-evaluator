@@ -2,13 +2,9 @@ package com.brzn.box_eval
 
 import com.brzn.box_eval.box.domain.BoxFacade
 import com.brzn.box_eval.box.domain.SampleBoxes
-import com.brzn.box_eval.box.dto.BoxDto
 import com.brzn.box_eval.evaluation.domain.EvaluationFacade
 import com.brzn.box_eval.evaluation.domain.SampleEvaluation
-import com.brzn.box_eval.mtg_io_client.domain.MtgIOClient
-import com.brzn.box_eval.scryfall_client.domain.ScryfallClient
 import com.jayway.jsonpath.JsonPath
-import io.vavr.collection.List
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.web.servlet.ResultActions
 
@@ -26,35 +22,8 @@ class AcceptanceTest extends IntegrationTest implements SampleBoxes, SampleEvalu
     @Autowired
     private EvaluationFacade evaluationFacade
 
-    def mtgIOClient = Mock(MtgIOClient);
-    def scryfallClient = Mock(ScryfallClient);
-
-    def "should get evaluation for recently released Box"() {
-
-        given: 'inventory with OldBox and recentBoxes recieved from external Api'
-        boxFacade.add(oldBox);
-        List<BoxDto> recentBoxes = List.of(lastWeekBox, todaysBox);
-
-        when: 'I invoke findLast'
-        def lastBox = boxFacade.findLast()
-
-        then: 'I see OldBox'
-        lastBox == oldBox;
-
-        when: 'I save recently released Boxes and invoke findLast'
-        boxFacade.addMany(recentBoxes)
-        def newLastBox = boxFacade.findLast();
-
-        then: 'I see that todayBox is now the last one'
-        newLastBox == todaysBox;
-    }
-
     def "should get last evaluation"() {
         given: 'inventory with SampleBox and SampleEvaluation parameters'
-        boxFacade.add(sampleBox)
-        sampleEvaluation.cardSetId = sampleBox.id
-        evaluationFacade.add(sampleEvaluation)
-
         when: 'I go to /evaluation/box?setName={setName}'
         ResultActions getEvaluation = mockMvc.perform(get("/evaluation/box?setName=" + sampleBox.cardSetName))
 

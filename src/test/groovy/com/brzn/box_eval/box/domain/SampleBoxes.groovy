@@ -12,7 +12,12 @@ trait SampleBoxes {
             .boosterStructure(createBoosterStructure())
             .build();
 
-    BoxDto oldBox = BoxDto.builder()
+    BoxDto oldBoxDto = BoxDto.builder()
+            .cardSetName("oldSet")
+            .releaseDate(LocalDate.MIN)
+            .build();
+
+    Box oldBox = Box.builder()
             .cardSetName("oldSet")
             .releaseDate(LocalDate.MIN)
             .build();

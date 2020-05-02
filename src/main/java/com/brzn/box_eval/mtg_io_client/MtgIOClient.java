@@ -1,4 +1,4 @@
-package com.brzn.box_eval.mtg_io_client.domain;
+package com.brzn.box_eval.mtg_io_client;
 
 import com.brzn.box_eval.mtg_io_client.dto.CardSet;
 import io.vavr.collection.List;
@@ -9,7 +9,7 @@ public class MtgIOClient {
     private RestTemplate restTemplate;
 
     MtgIOClient(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+        this.restTemplate =  restTemplate;
     }
 
     public List<CardSet> findSetsByCodes(List<String> setCodes){

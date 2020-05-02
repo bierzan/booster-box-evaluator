@@ -1,4 +1,4 @@
-package com.brzn.box_eval.scryfall_client.domain;
+package com.brzn.box_eval.scryfall_client;
 
 import com.brzn.box_eval.scryfall_client.dto.Card;
 import io.vavr.collection.List;

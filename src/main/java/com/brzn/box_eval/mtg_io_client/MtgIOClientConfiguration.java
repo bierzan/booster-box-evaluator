@@ -1,4 +1,4 @@
-package com.brzn.box_eval.mtg_io_client.domain;
+package com.brzn.box_eval.mtg_io_client;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

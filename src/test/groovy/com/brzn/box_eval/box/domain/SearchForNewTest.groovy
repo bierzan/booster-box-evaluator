@@ -1,9 +1,9 @@
 package com.brzn.box_eval.box.domain
 
 import com.brzn.box_eval.mtgIOclient.domain.SampleSets
-import com.brzn.box_eval.mtg_io_client.domain.MtgIOClient
+import com.brzn.box_eval.mtg_io_client.MtgIOClient
+import com.brzn.box_eval.scryfall_client.ScryfallClient
 import com.brzn.box_eval.scryfall_client.domain.SampleCards
-import com.brzn.box_eval.scryfall_client.domain.ScryfallClient
 import com.brzn.box_eval.scryfall_client.dto.Card
 import io.vavr.collection.List
 import io.vavr.control.Option
@@ -20,7 +20,7 @@ class SearchForNewTest extends Specification implements SampleBoxes, SampleSets,
 
     def "searchForhNew with oldBox in inventory"() {
         given: 'Inventory with oldBox and recent sets data provided by external MtG websites'
-        repository.findLast() >> Option.of(creator.from(oldBox));
+        repository.findLast() >> Option.of(creator.from(oldBoxDto));
         scryfallClient.findCardsReleasedAfter(_ as LocalDate) >> List.of(todayCard, lastWeekCard, lastWeekCard);
         mtgIOClient.findSetsByCodes(_ as List<String>) >> List.of(todaySet, lastWeekSet)
 
@@ -28,7 +28,7 @@ class SearchForNewTest extends Specification implements SampleBoxes, SampleSets,
         def newBoxes = service.searchForNew()
 
         then: 'I get boxes released after oldBox'
-        newBoxes.each { assert it.releaseDate > oldBox.releaseDate }
+        newBoxes.each { assert it.releaseDate > oldBoxDto.releaseDate }
     }
 
     def "searchForNew with up-to-date inventory"() {
