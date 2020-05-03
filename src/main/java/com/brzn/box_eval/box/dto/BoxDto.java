@@ -9,14 +9,13 @@ import java.util.HashMap;
 
 @Builder
 @Value
-@ToString
 public class BoxDto {
     @ToString.Exclude
-    private long id;
-    private String cardSetName;
+    long id;
+    String cardSetName;
     @ToString.Exclude
-    private HashMap boosterStructure;
-    private LocalDate releaseDate;
+    HashMap boosterStructure; //todo zmienic na interfejs
+    LocalDate releaseDate;
 }
 
 

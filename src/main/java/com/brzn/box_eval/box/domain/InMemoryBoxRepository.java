@@ -25,13 +25,6 @@ class InMemoryBoxRepository implements BoxRepository {
     }
 
     @Override
-    public Option<Box> findLast() {
-        return map
-                .values()
-                .maxBy(Box::getReleaseDate);
-    }
-
-    @Override
     public Option<LocalDate> findLastReleaseDate() {
         return map.values()
                 .maxBy(Box::getReleaseDate)

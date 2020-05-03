@@ -12,8 +12,6 @@ interface BoxRepository extends Repository<Box, Long> {
 
     Option<Box> findBySetName(String cardSetName);
 
-    Option<Box> findLast();
-
     Option<LocalDate> findLastReleaseDate();
 
     void saveAll(List<Box> boxes);
