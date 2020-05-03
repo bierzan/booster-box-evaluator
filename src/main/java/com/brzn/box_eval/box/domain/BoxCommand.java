@@ -1,5 +1,6 @@
 package com.brzn.box_eval.box.domain;
 
+import io.vavr.collection.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,8 +11,12 @@ class BoxCommand {
     private final BoxRepository repository;
 
     public void findNew(){
-        repository.findLastReleaseDate()
+        repository.saveAll(findLastReleasedBoxes());
+    }
+
+    private List<Box> findLastReleasedBoxes() {
+        return repository.findLastReleaseDate()
                 .map(finder::findBoxesReleasedAfter)
-                .peek(repository::saveAll);
+                .getOrElse(finder::findAllBoxes);
     }
 }

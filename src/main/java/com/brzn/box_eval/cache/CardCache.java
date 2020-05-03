@@ -17,4 +17,8 @@ class CardCache {
                 .filter(card -> card.getReleasedAt().isAfter(date))
                 .toList();
     }
+
+    List<Card> getAll(){
+        return cardCache;
+    }
 }

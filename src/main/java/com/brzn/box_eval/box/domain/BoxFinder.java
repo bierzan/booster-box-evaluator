@@ -10,22 +10,36 @@ import lombok.AllArgsConstructor;
 import java.time.LocalDate;
 
 @AllArgsConstructor
-public class BoxFinder {
+class BoxFinder {
     private final CardProvider cardProvider;
     private final MtgIO mtgIO;
     private final BoxCreator creator;
 
     public List<Box> findBoxesReleasedAfter(LocalDate date) { //todo test
         Set<String> setNames = getNamesOfSetsReleasedAfter(date);
+        return getBoxesBySetNames(setNames);
+    }
 
-        return mtgIO.findCardSetsByName(setNames)
-                .map(creator::from)
-                .toList();
+    public List<Box> findAllBoxes() {
+        Set<String> setNames = getNameOfAllSets();
+        return getBoxesBySetNames(setNames);
+    }
+
+    private Set<String> getNameOfAllSets() {
+        return cardProvider.getAll()
+                .map(Card::getSetName)
+                .toSet();
     }
 
     private Set<String> getNamesOfSetsReleasedAfter(LocalDate date) {
         return cardProvider.findCardsReleasedAfter(date)
-                    .map(Card::getSetName)
-                    .toSet();
+                .map(Card::getSetName)
+                .toSet();
+    }
+
+    private List<Box> getBoxesBySetNames(Set<String> setNames) {
+        return mtgIO.findCardSetsByName(setNames)
+                .map(creator::from)
+                .toList();
     }
 }

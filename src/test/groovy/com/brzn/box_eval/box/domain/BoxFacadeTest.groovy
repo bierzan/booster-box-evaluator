@@ -24,7 +24,7 @@ class BoxFacadeTest extends Specification implements SampleBoxes, SampleCardSets
         given: "Empty inventory and data from REST clients about new releases"
         InMemoryBoxRepository repository = new InMemoryBoxRepository()
         facade = createFacadeWithGivenRepository(repository)
-        cardProvider.findCardsReleasedAfter(_ as LocalDate) >> List.of(todayCard, lastWeekCard)
+        cardProvider.getAll() >> List.of(todayCard, lastWeekCard)
         mtgIO.findCardSetsByName(_ as Set<String>) >> List.of(todaySet, lastWeekSet)
         when: "I invoke findNew"
         facade.findNew()
