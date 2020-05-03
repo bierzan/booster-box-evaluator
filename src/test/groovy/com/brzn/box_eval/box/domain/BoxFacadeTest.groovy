@@ -40,7 +40,7 @@ class BoxFacadeTest extends Specification implements SampleBoxes, SampleCardSets
 
     def createFacadeWithGivenRepository(BoxRepository repo) {
         BoxFinder finder = new BoxFinder(cardProvider, mtgIO, creator);
-        BoxCommand command = new BoxCommand(creator, finder, repo)
+        BoxCommand command = new BoxCommand(finder, repo)
         return new BoxFacade(command, repo)
     }
 

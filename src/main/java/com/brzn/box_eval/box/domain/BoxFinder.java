@@ -16,12 +16,16 @@ public class BoxFinder {
     private final BoxCreator creator;
 
     public List<Box> findBoxesReleasedAfter(LocalDate date) { //todo test
-        Set<String> setNames = cardProvider.findCardsReleasedAfter(date)
-                .map(Card::getSetName)
-                .toSet();
+        Set<String> setNames = getNamesOfSetsReleasedAfter(date);
 
         return mtgIO.findCardSetsByName(setNames)
                 .map(creator::from)
                 .toList();
+    }
+
+    private Set<String> getNamesOfSetsReleasedAfter(LocalDate date) {
+        return cardProvider.findCardsReleasedAfter(date)
+                    .map(Card::getSetName)
+                    .toSet();
     }
 }

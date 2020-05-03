@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @AllArgsConstructor
 class BoxCommand {
-    private final BoxCreator creator;
     private final BoxFinder finder;
     private final BoxRepository repository;
 

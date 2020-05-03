@@ -17,5 +17,6 @@ public class CardProvider { //todo testy i konfiguracja
     }
     public List<Card> findCardsReleasedAfter(LocalDate date) {
         return cache.findCardsReleasedAfter(date); //todo obsluzyc nulla z cacha
+        //todo test na zwrot pustej listy
     }
 }
