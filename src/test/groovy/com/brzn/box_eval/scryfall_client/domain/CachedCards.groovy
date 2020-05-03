@@ -1,12 +1,12 @@
 package com.brzn.box_eval.scryfall_client.domain
 
-import com.brzn.box_eval.scryfall_client.dto.Card
+import com.brzn.box_eval.cache.dto.Card
 import groovy.transform.CompileStatic
 
 import java.time.LocalDate
 
 @CompileStatic
-trait SampleCards {
+trait CachedCards {
     Card todayCard = Card.builder()
             .name("todayCard")
             .releasedAt(LocalDate.now())

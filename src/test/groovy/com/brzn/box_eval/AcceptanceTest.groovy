@@ -10,10 +10,6 @@ import org.springframework.test.web.servlet.ResultActions
 
 import java.time.LocalDate
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-
 class AcceptanceTest extends IntegrationTest implements SampleBoxes, SampleEvaluation {
 
     @Autowired
@@ -22,20 +18,21 @@ class AcceptanceTest extends IntegrationTest implements SampleBoxes, SampleEvalu
     @Autowired
     private EvaluationFacade evaluationFacade
 
-    def "should get last evaluation"() {
-        given: 'inventory with SampleBox and SampleEvaluation parameters'
-        when: 'I go to /evaluation/box?setName={setName}'
-        ResultActions getEvaluation = mockMvc.perform(get("/evaluation/box?setName=" + sampleBox.cardSetName))
-
-        then: 'I see I got status 200 and evaluation refers to given card set'
-        getEvaluation
-                .andExpect(status().isOk())
-                .andExpect(jsonPath('$.cardSetId').value(sampleBox.id))
-
-        then: 'I see it is not todays evaluation'
-        def date1 = getLocalDateFromJson(getEvaluation, 'date');
-        date1 < LocalDate.now();
-    }
+    //todo do implementacji
+//    def "should get last evaluation"() {
+//        given: 'inventory with SampleBox and SampleEvaluation parameters'
+//        when: 'I go to /evaluation/box?setName={setName}'
+//        ResultActions getEvaluation = mockMvc.perform(get("/evaluation/box?setName=" + sampleBox.cardSetName))
+//
+//        then: 'I see I got status 200 and evaluation refers to given card set'
+//        getEvaluation
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath('$.cardSetId').value(sampleBox.id))
+//
+//        then: 'I see it is not todays evaluation'
+//        def date1 = getLocalDateFromJson(getEvaluation, 'date');
+//        date1 < LocalDate.now();
+//    }
 
     def LocalDate getLocalDateFromJson(ResultActions resultActions, String key) {
         def date = LocalDate.parse JsonPath.read(resultActions.andReturn().getResponse().getContentAsString(), '$.' + key);

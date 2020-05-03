@@ -44,6 +44,6 @@ class InMemoryBoxRepository implements BoxRepository {
     }
 
     public List<Box> findAll() {
-        return List.empty();
+        return map.values().toList();
     }
 }

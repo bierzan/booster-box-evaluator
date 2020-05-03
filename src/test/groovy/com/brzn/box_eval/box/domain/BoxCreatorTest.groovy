@@ -1,11 +1,10 @@
 package com.brzn.box_eval.box.domain
 
-import com.brzn.box_eval.mtgIOclient.domain.SampleSets
-import com.brzn.box_eval.scryfall_client.domain.SampleCards
-import com.brzn.box_eval.scryfall_client.dto.Card
+import com.brzn.box_eval.mtgIOclient.domain.SampleCardSets
+import com.brzn.box_eval.scryfall_client.domain.CachedCards
 import spock.lang.Specification
 
-class BoxCreatorTest extends Specification implements SampleSets, SampleCards {
+class BoxCreatorTest extends Specification implements SampleCardSets, CachedCards {
 
     def creator = new BoxCreator();
 
@@ -19,26 +18,6 @@ class BoxCreatorTest extends Specification implements SampleSets, SampleCards {
         resultBox.releaseDate == sampleCommonSet.releaseDate
         resultBox.cardSetCode == sampleCommonSet.code;
         resultBox.boosterQuantity == (short) 36;
-    }
-
-    @Override
-    Card getTodayCard() {
-        return SampleCards.super.getTodayCard()
-    }
-
-    @Override
-    void setTodayCard(Card todayCard) {
-        SampleCards.super.setTodayCard(todayCard)
-    }
-
-    @Override
-    Card getLastWeekCard() {
-        return SampleCards.super.getLastWeekCard()
-    }
-
-    @Override
-    void setLastWeekCard(Card lastWeekCard) {
-        SampleCards.super.setLastWeekCard(lastWeekCard)
     }
 }
 //todo pozostale pola do sprawdzenia

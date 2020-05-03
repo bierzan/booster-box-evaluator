@@ -1,15 +1,15 @@
 package com.brzn.box_eval.mtgIOclient.domain
 
+import com.brzn.box_eval.cache.dto.Card
 import com.brzn.box_eval.mtg_io_client.dto.CardSet
 import com.brzn.box_eval.mtg_io_client.dto.CardSetType
-import com.brzn.box_eval.scryfall_client.domain.SampleCards
-import com.brzn.box_eval.scryfall_client.dto.Card
+import com.brzn.box_eval.scryfall_client.domain.CachedCards
 import groovy.transform.CompileStatic
 
 import java.time.LocalDate
 
 @CompileStatic
-trait SampleSets implements SampleCards {
+trait SampleCardSets implements CachedCards {
     CardSet todaySet = from(todayCard)
 
     CardSet lastWeekSet = from(lastWeekCard)
