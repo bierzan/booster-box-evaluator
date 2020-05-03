@@ -21,7 +21,7 @@ class BoxConfiguration {
     BoxFacade boxFacade(BoxRepository repository) {
         BoxCreator creator = new BoxCreator();
         BoxFinder finder = new BoxFinder(cardProvider, mtgIO, creator);
-        BoxCommand command = new BoxCommand(creator, finder, repository);
+        BoxCommand command = new BoxCommand(finder, repository);
         return new BoxFacade(command, repository);
     }
 }

@@ -20,6 +20,19 @@ class BoxFacadeTest extends Specification implements SampleBoxes, SampleCardSets
     private BoxFacade facade
     // todo wydzielic do ustawiacza testow
 
+    def "should fill empty Box inventory with recently released boxes"() {
+        given: "Empty inventory and data from REST clients about new releases"
+        InMemoryBoxRepository repository = new InMemoryBoxRepository()
+        facade = createFacadeWithGivenRepository(repository)
+        cardProvider.findCardsReleasedAfter(_ as LocalDate) >> List.of(todayCard, lastWeekCard)
+        mtgIO.findCardSetsByName(_ as Set<String>) >> List.of(todaySet, lastWeekSet)
+        when: "I invoke findNew"
+        facade.findNew()
+        then: "I see new Boxes in inventory"
+        repository.findAll().contains(boxFromCardSet(todaySet))
+        repository.findAll().contains(boxFromCardSet(lastWeekSet))
+    }
+
     def "should update Box inventory with recently released boxes"() {
         given: "inventory with OldBox and data from REST clients about new releases"
         InMemoryBoxRepository repository = createRepositoryWithBoxes(oldBox);
