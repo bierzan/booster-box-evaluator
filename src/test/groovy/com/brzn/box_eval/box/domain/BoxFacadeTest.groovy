@@ -21,26 +21,34 @@ class BoxFacadeTest extends Specification implements SampleBoxes, SampleCardSets
     // todo wydzielic do ustawiacza testow
 
     def "should fill empty Box inventory with recently released boxes"() {
-        given: "Empty inventory and data from REST clients about new releases"
+        given: "Empty inventory"
         InMemoryBoxRepository repository = new InMemoryBoxRepository()
         facade = createFacadeWithGivenRepository(repository)
+        and: "Data about all Cards"
         cardProvider.getAll() >> List.of(todayCard, lastWeekCard)
+        and: "CardSets containing provided cards"
         mtgIO.findCardSetsByName(_ as Set<String>) >> List.of(todaySet, lastWeekSet)
+
         when: "I invoke findNew"
         facade.findNew()
+
         then: "I see new Boxes in inventory"
         repository.findAll().contains(boxFromCardSet(todaySet))
         repository.findAll().contains(boxFromCardSet(lastWeekSet))
     }
 
     def "should update Box inventory with recently released boxes"() {
-        given: "inventory with OldBox and data from REST clients about new releases"
+        given: "inventory with OldBox"
         InMemoryBoxRepository repository = createRepositoryWithBoxes(oldBox);
         facade = createFacadeWithGivenRepository(repository)
+        and: "Data about recently released Card"
         cardProvider.findCardsReleasedAfter(_ as LocalDate) >> List.of(todayCard, lastWeekCard)
+        and: "CardSets containing provided cards"
         mtgIO.findCardSetsByName(_ as Set<String>) >> List.of(todaySet, lastWeekSet)
+
         when: "I invoke findNew"
         facade.findNew()
+
         then: "I see new Boxes with OldBox in inventory"
         repository.findAll().contains(oldBox)
         repository.findAll().contains(boxFromCardSet(todaySet))
@@ -49,6 +57,23 @@ class BoxFacadeTest extends Specification implements SampleBoxes, SampleCardSets
         repository.findAll().each { box ->
             oldBox.getReleaseDate().isBefore(box.releaseDate)
         }
+    }
+
+    def "shouldn't put anything into Box inventory"() {
+        given: "inventory with recently released Box"
+        InMemoryBoxRepository repository = createRepositoryWithBoxes(todayBox);
+        facade = createFacadeWithGivenRepository(repository)
+        and: "Data from REST clients confirming no new releases"
+        cardProvider.findCardsReleasedAfter(_ as LocalDate) >> List.empty()
+        and: "Empty list of Cardsets as there were no new releases"
+        mtgIO.findCardSetsByName(_ as Set<String>) >> List.empty() //todo implementacja zapewniajaca zwrot pustej listy
+
+        when: "I invoke findNew"
+        facade.findNew()
+
+        then: "I that nothing was changed in inventory"
+        repository.findAll().contains(todayBox)
+        repository.findAll().size() == List.of(todayBox).size()
     }
 
     def createFacadeWithGivenRepository(BoxRepository repo) {

@@ -13,6 +13,11 @@ trait SampleBoxes {
             .releaseDate(LocalDate.MIN)
             .build();
 
+    Box todayBox = Box.builder()
+            .cardSetName("todaySet")
+            .releaseDate(LocalDate.now())
+            .build();
+
 }
 
 
