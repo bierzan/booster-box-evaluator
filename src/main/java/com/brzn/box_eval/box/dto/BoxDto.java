@@ -1,11 +1,11 @@
 package com.brzn.box_eval.box.dto;
 
+import io.vavr.collection.Map;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 
 @Builder
 @Value
@@ -14,7 +14,7 @@ public class BoxDto {
     long id;
     String cardSetName;
     @ToString.Exclude
-    HashMap boosterStructure; //todo zmienic na interfejs
+    Map<String, String> boosterStructure;
     LocalDate releaseDate;
 }
 

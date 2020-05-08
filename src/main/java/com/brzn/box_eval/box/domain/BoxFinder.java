@@ -15,31 +15,19 @@ class BoxFinder {
     private final MtgIO mtgIO;
     private final BoxCreator creator;
 
-    public List<Box> findBoxesReleasedAfter(LocalDate date) { //todo test
-        Set<String> setNames = getNamesOfSetsReleasedAfter(date);
-        return getBoxesBySetNames(setNames);
-    }
-
-    public List<Box> findAllBoxes() {
-        Set<String> setNames = getNameOfAllSets();
-        return getBoxesBySetNames(setNames);
-    }
-
-    private Set<String> getNameOfAllSets() {
-        return cardProvider.getAll()
+    public List<Box> findBoxesReleasedAfter(LocalDate date) { //todo test na null (gdyby w bazie zapisal sie null)
+        Set<String> setNames = cardProvider.findCardsReleasedAfter(date)
                 .map(Card::getSetName)
                 .toSet();
-    }
-
-    private Set<String> getNamesOfSetsReleasedAfter(LocalDate date) {
-        return cardProvider.findCardsReleasedAfter(date)
-                .map(Card::getSetName)
-                .toSet();
-    }
-
-    private List<Box> getBoxesBySetNames(Set<String> setNames) {
         return mtgIO.findCardSetsByName(setNames)
                 .map(creator::from)
                 .toList();
     }
+
+    public List<Box> findAllBoxes() {
+        return mtgIO.findAllCardSets()
+                .map(creator::from)
+                .toList();
+    }
+
 }
