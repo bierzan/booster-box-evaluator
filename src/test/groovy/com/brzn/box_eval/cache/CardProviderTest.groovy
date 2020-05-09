@@ -38,4 +38,15 @@ class CardProviderTest extends Specification implements CachedCards {
         then: "I get empty list"
         cards.isEmpty()
     }
+
+    def "should return empty List when given date is null"(){
+        given: "Cache with todayCard"
+        cache.add(todayCard)
+
+        when: "I invoke findCardsReleasedAfter with null as date"
+        def cards = provider.findCardsReleasedAfter(null)
+
+        then: "I get empty list"
+        cards.isEmpty()
+    }
 }
