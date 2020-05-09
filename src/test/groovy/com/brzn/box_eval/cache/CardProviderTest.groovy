@@ -13,7 +13,6 @@ class CardProviderTest extends Specification implements CachedCards {
         given: "Cache with lastWeekCard and todayCard"
         cache.add(lastWeekCard)
         cache.add(todayCard)
-
         and: "Very old date I want to use to look for cards"
         def date = LocalDate.MIN
 
@@ -25,5 +24,18 @@ class CardProviderTest extends Specification implements CachedCards {
         cards.contains(todayCard)
         and: "No other cards returned from cache"
         cards.size() == 2
+    }
+
+    def "should return empty List as no cards were released after given date"(){
+        given: "Cache with todayCard"
+        cache.add(todayCard)
+        and: "Todays date I want to use to look for cards"
+        def date = LocalDate.now()
+
+        when: "I invoke findCardsReleasedAfter with given date"
+        def cards = provider.findCardsReleasedAfter(date)
+
+        then: "I get empty list"
+        cards.isEmpty()
     }
 }
