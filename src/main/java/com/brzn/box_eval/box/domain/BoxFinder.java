@@ -15,7 +15,7 @@ class BoxFinder {
     private final MtgIO mtgIO;
     private final BoxCreator creator;
 
-    public List<Box> findBoxesReleasedAfter(LocalDate date) { //todo test na null (gdyby w bazie zapisal sie null)
+    public List<Box> findBoxesReleasedAfter(LocalDate date) {
         Set<String> setNames = cardProvider.findCardsReleasedAfter(date)
                 .map(Card::getSetName)
                 .toSet();

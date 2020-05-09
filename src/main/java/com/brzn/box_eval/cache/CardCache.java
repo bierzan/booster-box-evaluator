@@ -6,7 +6,7 @@ import io.vavr.collection.List;
 import java.time.LocalDate;
 
 class CardCache {
-    private final List<Card> cardCache;
+    private List<Card> cardCache;
 
     public CardCache() {
         cardCache = List.empty();
@@ -20,5 +20,9 @@ class CardCache {
 
     List<Card> getAll(){
         return cardCache;
+    }
+
+    public void add(Card card){
+        cardCache = cardCache.append(card);
     }
 }
