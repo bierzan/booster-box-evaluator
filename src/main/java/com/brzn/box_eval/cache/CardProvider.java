@@ -2,9 +2,12 @@ package com.brzn.box_eval.cache;
 
 import com.brzn.box_eval.cache.dto.Card;
 import io.vavr.collection.List;
+import io.vavr.control.Option;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 
+@Slf4j
 public class CardProvider { //todo testy!!!!!!!!!!!
     private final CardCache cache;
 
@@ -17,9 +20,12 @@ public class CardProvider { //todo testy!!!!!!!!!!!
     }
 
     public List<Card> findCardsReleasedAfter(LocalDate date) {
-        return cache.findCardsReleasedAfter(date); //todo obsluzyc nulla z cacha
-        //todo test na zwrot pustej listy
-        //todo date nie bedzie nullem
+        return Option.of(date)
+                .map(cache::findCardsReleasedAfter)
+                .getOrElse(() -> {
+                    log.warn("date can't be null");
+                    return List.empty();
+                });
     }
 
     public List<Card> getAll() {
