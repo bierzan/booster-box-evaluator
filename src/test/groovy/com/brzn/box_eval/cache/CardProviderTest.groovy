@@ -1,6 +1,7 @@
 package com.brzn.box_eval.cache
 
 import com.brzn.box_eval.scryfall_client.domain.CachedCards
+import nl.altindag.log.LogCaptor
 import spock.lang.Specification
 
 import java.time.LocalDate
@@ -8,6 +9,10 @@ import java.time.LocalDate
 class CardProviderTest extends Specification implements CachedCards {
     CardCache cache = new CardCache()
     CardProvider provider = new CardProvider(cache)
+
+    LogCaptor<CardProvider> logCaptor = LogCaptor.forClass(CardProvider.class);
+
+
 
     def "should find cards released after given date"(){
         given: "Cache with lastWeekCard and todayCard"
@@ -48,5 +53,7 @@ class CardProviderTest extends Specification implements CachedCards {
 
         then: "I get empty list"
         cards.isEmpty()
+        and: "I see log warning me about passing null value"
+        logCaptor.getLogs("warn").contains("date can't be null")
     }
 }
