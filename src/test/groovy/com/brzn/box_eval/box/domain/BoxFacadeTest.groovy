@@ -1,11 +1,11 @@
 package com.brzn.box_eval.box.domain
 
+import com.brzn.box_eval.cache.CachedCards
 import com.brzn.box_eval.cache.CardProvider
 import com.brzn.box_eval.cache.dto.Card
 import com.brzn.box_eval.mtg_io_client.MtgIO
 import com.brzn.box_eval.mtg_io_client.dto.CardSet
 import com.brzn.box_eval.mtg_io_client.dto.CardSetType
-import com.brzn.box_eval.scryfall_client.domain.CachedCards
 import io.vavr.collection.List
 import io.vavr.collection.Set
 import spock.lang.Specification

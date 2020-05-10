@@ -1,7 +1,7 @@
 package com.brzn.box_eval.box.domain
 
+import com.brzn.box_eval.cache.CachedCards
 import com.brzn.box_eval.mtgIOclient.domain.SampleCardSets
-import com.brzn.box_eval.scryfall_client.domain.CachedCards
 import spock.lang.Specification
 
 class BoxCreatorTest extends Specification implements SampleCardSets, CachedCards {

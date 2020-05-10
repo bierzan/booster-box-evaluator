@@ -1,9 +1,8 @@
 package com.brzn.box_eval.mtgIOclient.domain
 
-
+import com.brzn.box_eval.cache.CachedCards
 import com.brzn.box_eval.mtg_io_client.dto.CardSet
 import com.brzn.box_eval.mtg_io_client.dto.CardSetType
-import com.brzn.box_eval.scryfall_client.domain.CachedCards
 import groovy.transform.CompileStatic
 
 import java.time.LocalDate

@@ -3,20 +3,18 @@ package com.brzn.box_eval.cache;
 import com.brzn.box_eval.cache.dto.Card;
 import io.vavr.collection.List;
 import io.vavr.control.Option;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 
 @Slf4j
-public class CardProvider { //todo testy!!!!!!!!!!!
+@AllArgsConstructor
+public class CardProvider {
     private final CardCache cache;
 
     private CardProvider() {
         this.cache = new CardCache();
-    }
-
-    public CardProvider(CardCache cache) {
-        this.cache = cache;
     }
 
     public List<Card> findCardsReleasedAfter(LocalDate date) {

@@ -1,20 +1,18 @@
 package com.brzn.box_eval.cache
 
-import com.brzn.box_eval.scryfall_client.domain.CachedCards
+
+import io.vavr.collection.List
 import nl.altindag.log.LogCaptor
 import spock.lang.Specification
 
 import java.time.LocalDate
 
 class CardProviderTest extends Specification implements CachedCards {
-    CardCache cache = new CardCache()
-    CardProvider provider = new CardProvider(cache)
+    private CardCache cache = new CardCache()
+    private CardProvider provider = new CardProvider(cache)
+    private LogCaptor<CardProvider> logCaptor = LogCaptor.forClass(CardProvider.class);
 
-    LogCaptor<CardProvider> logCaptor = LogCaptor.forClass(CardProvider.class);
-
-
-
-    def "should find cards released after given date"(){
+    def "should find cards released after given date"() {
         given: "Cache with lastWeekCard and todayCard"
         cache.add(lastWeekCard)
         cache.add(todayCard)
@@ -31,7 +29,7 @@ class CardProviderTest extends Specification implements CachedCards {
         cards.size() == 2
     }
 
-    def "should return empty List as no cards were released after given date"(){
+    def "should return empty List as no cards were released after given date"() {
         given: "Cache with todayCard"
         cache.add(todayCard)
         and: "Todays date I want to use to look for cards"
@@ -44,7 +42,7 @@ class CardProviderTest extends Specification implements CachedCards {
         cards.isEmpty()
     }
 
-    def "should return empty List when given date is null"(){
+    def "should return empty List when given date is null"() {
         given: "Cache with todayCard"
         cache.add(todayCard)
 
@@ -55,5 +53,17 @@ class CardProviderTest extends Specification implements CachedCards {
         cards.isEmpty()
         and: "I see log warning me about passing null value"
         logCaptor.getLogs("warn").contains("date can't be null")
+    }
+
+    def "should return every element of cache"() {
+        given: "Cache with todayCard"
+        cache.add(todayCard)
+        cache.add(lastWeekCard)
+
+        when: "I invoke getAll"
+        def cards = provider.getAll()
+
+        then: "I get list of all cards"
+        cards == List.of(todayCard, lastWeekCard)
     }
 }

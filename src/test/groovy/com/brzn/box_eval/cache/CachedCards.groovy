@@ -1,4 +1,4 @@
-package com.brzn.box_eval.scryfall_client.domain
+package com.brzn.box_eval.cache
 
 import com.brzn.box_eval.cache.dto.Card
 import groovy.transform.CompileStatic
