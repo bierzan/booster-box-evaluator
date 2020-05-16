@@ -14,7 +14,6 @@ trait SampleCardSets implements CachedCards {
             .code("ss")
             .name("sampleSet")
             .releaseDate(LocalDate.now())
-            .booster("boosterStructureAsString")
             .type(CardSetType.EXPANSION)
             .block("sampleBlock")
             .build();

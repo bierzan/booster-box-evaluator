@@ -5,17 +5,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-class MtgIOClientConfiguration {
+class MtgIOConfiguration {
 
     private RestTemplate restTemplate;
 
-    MtgIOClient mtgIOClient() {
-        return mtgIOClient(restTemplate);
+    @Bean
+    MtgIO mtgIO() {
+        MtgIOClient client = new MtgIOClient();
+        return new MtgIO(client);
     }
 
-    @Bean
-    MtgIOClient mtgIOClient(RestTemplate restTemplate) {
-        return new MtgIOClient(restTemplate);
-    }
+
+    //todo prywtny konstruktor jest przykryty kiedy dodajemy wieloargumentowy
 
 }

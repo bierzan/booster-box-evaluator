@@ -1,29 +1,22 @@
 package com.brzn.box_eval.mtg_io_client.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum CardSetType {
-    CORE ("core"),
-    EXPANSION ("expansion"),
-    REPRINT ("reprint"),
-    BOX ("box"),
-    UN("un"),
-    FROM_THE_VAULT ("from the vault"),
-    PREMIUM_DECK ("premium deck"),
-    DUEL ("duel deck"),
-    STARTER ("starter"),
-    COMMANDER ("commander"),
-    PLANECHASE ("planechase"),
-    ARCHENEMY ("archenemy"),
-    PROMO ("promo"),
-    VANGUARD ("vanguard"),
-    MASTERS ("masters");
+    @JsonProperty("core") CORE,
+    @JsonProperty("expansion") EXPANSION,
+    @JsonProperty("reprint") REPRINT,
+    @JsonProperty("box") BOX,
+    @JsonProperty("un") UN,
+    @JsonProperty("from the vault") FROM_THE_VAULT,
+    @JsonProperty("premium deck") PREMIUM_DECK,
+    @JsonProperty("duel deck") DUEL,
+    @JsonProperty("starter") STARTER,
+    @JsonProperty("commander") COMMANDER,
+    @JsonProperty("planechase") PLANECHASE,
+    @JsonProperty("archenemy") ARCHENEMY,
+    @JsonProperty("promo") PROMO,
+    @JsonProperty("vanguard") VANGUARD,
+    @JsonProperty("masters") MASTERS;
 
-    private String name;
-
-    CardSetType(String name) {
-        this.name = name;
-    }
-
-    String getName() {
-        return name;
-    }
 }

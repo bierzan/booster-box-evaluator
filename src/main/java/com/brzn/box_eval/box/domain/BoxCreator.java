@@ -24,12 +24,7 @@ class BoxCreator {
                 .cardSetName(cardSet.getName())
                 .cardSetCode(cardSet.getCode())
                 .boosterQuantity(getQuantityBySetType(cardSet))
-                .booster(mapBoosterStructure(cardSet.getBooster()))
                 .build();
-    }
-
-    private String mapBoosterStructure(String booster) {
-        return null;
     }
 
     private short getQuantityBySetType(CardSet cardSet) { //todo unit test dla nulla
