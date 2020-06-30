@@ -1,7 +1,7 @@
 package com.brzn.box_eval.mtg_io_client.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +14,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties
-public class CardSet {
+public class CardSet { //todo czy to zrobic prywatne a zwracac CardSetVO
     private String code;
     private String name;
-    private JsonNode booster; //todo okreslic docelowy obiekt
+    @JsonDeserialize(using = BoosterDeserializer.class)
+    private String booster; //todo okreslic docelowy obiekt
     private LocalDate releaseDate;
     private CardSetType type;
     private String block;

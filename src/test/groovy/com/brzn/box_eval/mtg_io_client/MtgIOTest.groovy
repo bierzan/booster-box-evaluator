@@ -1,19 +1,27 @@
 package com.brzn.box_eval.mtg_io_client
 
 import com.brzn.box_eval.mtgIOclient.domain.SampleCardSets
+import com.brzn.box_eval.mtg_io_client.dto.CardSetsArray
+import com.google.gson.GsonBuilder
 import io.vavr.collection.List
+import org.assertj.core.util.Lists
+import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 
 class MtgIOTest extends Specification implements SampleCardSets {
 
-    MtgIOClient client = new MtgIOClient()
+    RestTemplate restTemplate = Mock(RestTemplate)
+    MtgIOClient client = new MtgIOClient(restTemplate);
     MtgIO mtgIO = new MtgIO(client);
 
-    def "should find CardSets by list of CardSets names"() {
+    def "should find CardSets by list of CardSets names"() { //todo czy trzeba osobno testowac resttemplate
         given:
-//        def cardSetNames = List.of(sampleCommonSet.name).toSet()
-        def cardSetNames = List.of("khans").toSet()
-        client.findCardSetsByName(cardSetNames) >> [sampleCommonSet]
+        def cardSetNames = List.of(sampleCommonSet.name).toSet()
+//        def cardSetNames = List.of("khans").toSet()
+        def gson = new GsonBuilder().create();
+        restTemplate.getForObject(_ as String, CardSetsArray.class) >> new CardSetsArray(Lists.newArrayList(sampleCommonSet));
+
+//        client.findCardSetsByName(cardSetNames) >> [sampleCommonSet]
         when:
         def cardSets = mtgIO.findCardSetsByName(cardSetNames)
         then:

@@ -11,21 +11,18 @@ import java.util.stream.Collectors;
 
 class MtgIOClient {
 
-    public static final String GET_FOR_CARDSETS_BY_NAMES = "https://api.magicthegathering.io/v1/sets?name=";
+    public static final String GET_FOR_CARDSETS_BY_NAMES = "https://api.magicthegathering.io/v1/sets?name="; //todo private
     private final RestTemplate restTemplate;
 
-    public MtgIOClient() {
-        this.restTemplate = new RestTemplate();
+    public MtgIOClient(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     List<CardSet> findCardSetsByName(Set<String> setNames) {
-        restTemplate.getInterceptors().add((request, body, execution) -> {
-            request.getHeaders().set("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-            return execution.execute(request, body);
-        });
+
         String setNamesAsSingleString = setNames.collect(Collectors.joining("|"));
         String url = GET_FOR_CARDSETS_BY_NAMES + setNamesAsSingleString;
-        return Option.of(restTemplate.getForObject(url, CardSetsArray.class))
+        return Option.of(restTemplate.getForObject(url, CardSetsArray.class)) //todo test jednostkowy na odpowiedz samego serwera MockRestServiceServer - wydzielenie restemplate do osobnego serwisu
                 .map(CardSetsArray::getSets)
                 .map(List::ofAll)
                 .getOrElse(List.empty());
