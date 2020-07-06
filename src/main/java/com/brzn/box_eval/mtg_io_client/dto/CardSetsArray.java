@@ -12,7 +12,7 @@ public class CardSetsArray {
         return Optional.ofNullable(sets).orElseGet(Collections::emptyList);
     }
 
-    public CardSetsArray(List<CardSet> sets) {
+    public CardSetsArray(List<CardSet> sets) { //todo czy ten konstruktor jest tylko na potrzeby testow?
         this.sets = sets;
     }
 

@@ -2,7 +2,7 @@ package com.brzn.box_eval.mtg_io_client
 
 import com.brzn.box_eval.mtgIOclient.domain.SampleCardSets
 import com.brzn.box_eval.mtg_io_client.dto.CardSetsArray
-import com.google.gson.GsonBuilder
+import io.vavr.collection.HashSet
 import io.vavr.collection.List
 import org.assertj.core.util.Lists
 import org.springframework.web.client.RestTemplate
@@ -14,63 +14,39 @@ class MtgIOTest extends Specification implements SampleCardSets {
     MtgIOClient client = new MtgIOClient(restTemplate);
     MtgIO mtgIO = new MtgIO(client);
 
-    def "should find CardSets by list of CardSets names"() { //todo czy trzeba osobno testowac resttemplate
+    def "should find list with single CardSet when Rest answered with array of one CardSet"() {
         given:
-        def cardSetNames = List.of(sampleCommonSet.name).toSet()
-//        def cardSetNames = List.of("khans").toSet()
-        def gson = new GsonBuilder().create();
         restTemplate.getForObject(_ as String, CardSetsArray.class) >> new CardSetsArray(Lists.newArrayList(sampleCommonSet));
-
-//        client.findCardSetsByName(cardSetNames) >> [sampleCommonSet]
         when:
-        def cardSets = mtgIO.findCardSetsByName(cardSetNames)
+        def cardSets = mtgIO.findCardSetsByName(HashSet.of(sampleCommonSet.name))
         then:
-        cardSets.map({ set -> set.name })
-                .contains(sampleCommonSet.name)
+        cardSets == List.of(sampleCommonSet)
     }
 
-    def json = '{\n' +
-            '   "sets":[\n' +
-            '      {\n' +
-            '         "code":"KTK",\n' +
-            '         "name":"Khans of Tarkir",\n' +
-            '         "type":"expansion",\n' +
-            '         "booster":[\n' +
-            '            [\n' +
-            '               "rare",\n' +
-            '               "mythic rare"\n' +
-            '            ],\n' +
-            '            "uncommon",\n' +
-            '            "uncommon",\n' +
-            '            "uncommon",\n' +
-            '            "common",\n' +
-            '            "common",\n' +
-            '            "common",\n' +
-            '            "common",\n' +
-            '            "common",\n' +
-            '            "common",\n' +
-            '            "common",\n' +
-            '            "common",\n' +
-            '            "common",\n' +
-            '            "common",\n' +
-            '            "land",\n' +
-            '            "marketing"\n' +
-            '         ],\n' +
-            '         "releaseDate":"2014-09-26",\n' +
-            '         "block":"Khans of Tarkir",\n' +
-            '         "onlineOnly":false\n' +
-            '      },\n' +
-            '      {\n' +
-            '         "code":"PKTK",\n' +
-            '         "name":"Khans of Tarkir Promos",\n' +
-            '         "type":"promo",\n' +
-            '         "releaseDate":"2014-09-27",\n' +
-            '         "block":"Khans of Tarkir",\n' +
-            '         "onlineOnly":false\n' +
-            '      }\n' +
-            '   ]\n' +
-            '}'
-}
-//todo test na pusty set nazw
+    def "should find list with multiple CardSets when Rest answered with array of many CardSets"() {
+        given:
+        restTemplate.getForObject(_ as String, CardSetsArray.class) >> new CardSetsArray(Lists.newArrayList(sampleCommonSet, sampleMastersSet));
+        when:
+        def cardSets = mtgIO.findCardSetsByName(HashSet.of(sampleCommonSet.name, sampleMastersSet.name))
+        then:
+        cardSets == List.of(sampleCommonSet, sampleMastersSet)
+    }
 
-//{"sets":[{"code":"AMH1","name":"Modern Horizons Art Series","type":"memorabilia","releaseDate":"2019-06-05","onlineOnly":false},{"code":"MD1","name":"Modern Event Deck 2014","type":"box","releaseDate":"2014-05-30","onlineOnly":false},{"code":"MH1","name":"Modern Horizons","type":"draft_innovation","booster":[["rare","mythic rare"],"uncommon","uncommon","uncommon","common","common","common","common","common","common","common","common","common","common","snow land","token","full art print"],"releaseDate":"2019-06-14","onlineOnly":false},{"code":"MM2","name":"Modern Masters 2015","type":"masters","booster":[["rare","mythic rare"],"uncommon","uncommon","uncommon","common","common","common","common","common","common","common","common","common","common",["foil mythic rare","foil rare","foil uncommon","foil common"]],"releaseDate":"2015-05-22","onlineOnly":false},{"code":"MM3","name":"Modern Masters 2017","type":"masters","booster":[["rare","mythic rare"],"uncommon","uncommon","uncommon","common","common","common","common","common","common","common","common","common","common",["foil mythic rare","foil rare","foil uncommon","foil common"]],"releaseDate":"2017-03-17","onlineOnly":false},{"code":"MMA","name":"Modern Masters","type":"masters","booster":[["rare","mythic rare"],"uncommon","uncommon","uncommon","common","common","common","common","common","common","common","common","common","common",["foil mythic rare","foil rare","foil uncommon","foil common"]],"releaseDate":"2013-06-07","onlineOnly":false},{"code":"PMH1","name":"Modern Horizons Promos","type":"promo","releaseDate":"2019-06-14","onlineOnly":false}]}
+    def "should find empty list when invoked with list without names"() {
+        given:
+        restTemplate.getForObject(_ as String, CardSetsArray.class) >> new CardSetsArray(Lists.newArrayList(sampleCommonSet, sampleMastersSet));
+        when:
+        def cardSets = mtgIO.findCardSetsByName(HashSet.of())
+        then:
+        cardSets == Collections.emptyList()
+    }
+
+    def "should find empty list when invoked with null as list of names"() {
+        given:
+        restTemplate.getForObject(_ as String, CardSetsArray.class) >> new CardSetsArray(Lists.newArrayList(sampleCommonSet, sampleMastersSet));
+        when:
+        def cardSets = mtgIO.findCardSetsByName(null)
+        then:
+        cardSets == Collections.emptyList()
+    }
+}

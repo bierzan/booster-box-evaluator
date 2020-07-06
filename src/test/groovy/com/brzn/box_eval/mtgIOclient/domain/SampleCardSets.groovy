@@ -18,7 +18,13 @@ trait SampleCardSets implements CachedCards {
             .block("sampleBlock")
             .build();
 
-
+    CardSet sampleMastersSet = CardSet.builder()
+            .code("ms")
+            .name("masterSet")
+            .releaseDate(LocalDate.now())
+            .type(CardSetType.MASTERS)
+            .block("sampleMastersBlock")
+            .build();
 }
 
 
