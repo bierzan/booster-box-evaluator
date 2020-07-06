@@ -10,9 +10,12 @@ public class MtgIO {
     private final MtgIOClient client;
 
     public List<CardSet> findCardSetsByName(Set<String> setNames) {
-        return client.findCardSetsByName(setNames);
+        SearchedCardSetNames searchedNames = new SearchedCardSetNames(setNames);
+        if (searchedNames.hasValidSetNames()) {
+            return client.findCardSetsByName(setNames);
+        }
+        return List.empty();
     }
-    //todo w przypadku pustej listy nazw zwracac ma pusta liste setow - rest zwraca wszystkie
 
     public List<CardSet> findAllCardSets() {
         return List.empty();
