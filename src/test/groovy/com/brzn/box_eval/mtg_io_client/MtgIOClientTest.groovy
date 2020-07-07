@@ -1,9 +1,9 @@
 package com.brzn.box_eval.mtg_io_client
 
-
 import com.brzn.box_eval.mtgIOclient.domain.SampleCardSets
 import com.brzn.box_eval.mtg_io_client.dto.CardSetsArray
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.common.collect.Lists
 import io.vavr.collection.List
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -29,7 +29,7 @@ class MtgIOClientTest extends Specification implements SampleCardSets {
 
     def "should return and deserialize sampleSet"() { //todo do refactoru
         given:
-        def names = List.of("khans2").toSet()
+        def names = new SearchedCardSets(List.of("khans2").toSet())
         mockServer.expect(requestTo("https://api.magicthegathering.io/v1/sets?name=khans"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withStatus(HttpStatus.OK)
@@ -43,7 +43,7 @@ class MtgIOClientTest extends Specification implements SampleCardSets {
         wynik.toJavaList() == expected.getSets()
     }
 
-    def json2 = objectMapper.writeValueAsString(new CardSetsArray(java.util.List.of(sampleCommonSet)))
+    def json2 = objectMapper.writeValueAsString(new CardSetsArray(Lists.newArrayList(sampleCommonSet)))
 
     def json = '{\n' +
             '   "sets":[\n' +

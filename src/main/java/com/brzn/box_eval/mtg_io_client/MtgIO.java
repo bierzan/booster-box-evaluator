@@ -10,9 +10,9 @@ public class MtgIO {
     private final MtgIOClient client;
 
     public List<CardSet> findCardSetsByName(Set<String> setNames) {
-        SearchedCardSetNames searchedNames = new SearchedCardSetNames(setNames);
-        if (searchedNames.hasValidSetNames()) {
-            return client.findCardSetsByName(setNames);
+        SearchedCardSets searchedCardSets = new SearchedCardSets(setNames);
+        if (searchedCardSets.hasValidSetNames()) {
+            return client.findCardSetsByName(searchedCardSets);
         }
         return List.empty();
     }

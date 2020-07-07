@@ -3,7 +3,6 @@ package com.brzn.box_eval.mtg_io_client;
 import com.brzn.box_eval.mtg_io_client.dto.CardSet;
 import com.brzn.box_eval.mtg_io_client.dto.CardSetsArray;
 import io.vavr.collection.List;
-import io.vavr.collection.Set;
 import io.vavr.control.Option;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,9 +17,10 @@ class MtgIOClient {
         this.restTemplate = restTemplate;
     }
 
-    List<CardSet> findCardSetsByName(Set<String> setNames) {
+    List<CardSet> findCardSetsByName(SearchedCardSets searchedCardSets) {
 
-        String setNamesAsSingleString = setNames.collect(Collectors.joining("|"));
+        String setNamesAsSingleString = searchedCardSets.getNames().collect(Collectors.joining("|"));
+
         String url = GET_FOR_CARDSETS_BY_NAMES + setNamesAsSingleString;
         return Option.of(restTemplate.getForObject(url, CardSetsArray.class)) //todo test jednostkowy na odpowiedz samego serwera MockRestServiceServer - wydzielenie restemplate do osobnego serwisu
                 .map(CardSetsArray::getSets)
