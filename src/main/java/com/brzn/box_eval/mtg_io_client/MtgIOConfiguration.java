@@ -14,7 +14,8 @@ class MtgIOConfiguration {
             request.getHeaders().set("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
             return execution.execute(request, body);
         });
-        MtgIOClient client = new MtgIOClient(restTemplate);
+        MtgIORestTemplate mtgIORestTemplate = new MtgIORestTemplate(restTemplate);
+        MtgIOClient client = new MtgIOClient(mtgIORestTemplate);
         return new MtgIO(client);
     }
 

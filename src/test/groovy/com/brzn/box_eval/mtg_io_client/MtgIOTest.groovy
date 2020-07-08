@@ -11,7 +11,7 @@ import spock.lang.Specification
 class MtgIOTest extends Specification implements SampleCardSets {
 
     RestTemplate restTemplate = Mock(RestTemplate)
-    MtgIOClient client = new MtgIOClient(restTemplate);
+    MtgIOClient client = new MtgIOClient(new MtgIORestTemplate(restTemplate));
     MtgIO mtgIO = new MtgIO(client);
 
     def "should find list with single CardSet when Rest answered with array of one CardSet"() {
