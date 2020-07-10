@@ -14,5 +14,5 @@ interface BoxRepository extends Repository<Box, Long> {
 
     Option<LocalDate> findLastReleaseDate();
 
-    void saveAll(List<Box> boxes);
+    List<Long> saveAll(List<Box> boxes);
 }

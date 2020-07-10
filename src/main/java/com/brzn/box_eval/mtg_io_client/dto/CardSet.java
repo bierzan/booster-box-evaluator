@@ -14,13 +14,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties
-public class CardSet { //todo czy to zrobic prywatne a zwracac CardSetVO
+public class CardSet {
     private String code;
     private String name;
     @JsonDeserialize(using = BoosterDeserializer.class)
-    private String booster; //todo okreslic docelowy obiekt
+    private String booster;
     private LocalDate releaseDate;
     private CardSetType type;
     private String block;
 }
-//todo deserializer + sprawdzenie czy mapuje arraye

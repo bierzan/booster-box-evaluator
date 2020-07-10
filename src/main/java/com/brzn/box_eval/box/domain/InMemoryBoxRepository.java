@@ -19,9 +19,8 @@ class InMemoryBoxRepository implements BoxRepository {
     }
 
     @Override
-    public Option<Box> findBySetName(String cardSetName) { //todo zmienic na id
-        Option<Box> box = map.get(cardSetName);
-        return box;
+    public Option<Box> findBySetName(String cardSetName) {
+        return map.get(cardSetName);
     }
 
     @Override
@@ -32,8 +31,9 @@ class InMemoryBoxRepository implements BoxRepository {
     }
 
     @Override
-    public void saveAll(List<Box> boxes) { //todo co powinna zwracac metoda?
-        boxes.forEach(this::save);
+    public List<Long> saveAll(List<Box> boxes) {
+        return boxes.map(this::save)
+                .map(Box::getId);
     }
 
     public List<Box> findAll() {

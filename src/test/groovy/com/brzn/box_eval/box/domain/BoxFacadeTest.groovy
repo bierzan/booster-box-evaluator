@@ -64,7 +64,7 @@ class BoxFacadeTest extends Specification implements SampleBoxes, CachedCards {
         and: "Data from REST clients confirming no new releases"
         cardProvider.findCardsReleasedAfter(_ as LocalDate) >> List.empty()
         and: "Empty list of Cardsets as there were no new releases"
-        mtgIO.findCardSetsByName(_ as Set<String>) >> List.empty() //todo implementacja zapewniajaca zwrot pustej listy
+        mtgIO.findCardSetsByName(_ as Set<String>) >> List.empty();
 
         when: "I invoke findNew"
         createBoxFacade(repository).findNew()

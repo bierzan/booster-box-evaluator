@@ -18,8 +18,4 @@ class MtgIOConfiguration {
         MtgIOClient client = new MtgIOClient(mtgIORestTemplate);
         return new MtgIO(client);
     }
-
-
-    //todo prywtny konstruktor jest przykryty kiedy dodajemy wieloargumentowy
-
 }

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 class BoxConfiguration {
 
-    private final CardProvider cardProvider; //todo nazwa klasy do zastanowienia
+    private final CardProvider cardProvider;
     private final MtgIO mtgIO;
 
     BoxFacade boxFacade() {
