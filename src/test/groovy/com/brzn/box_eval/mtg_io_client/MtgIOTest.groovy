@@ -14,7 +14,7 @@ class MtgIOTest extends Specification implements SampleCardSets {
     MtgIOClient client = new MtgIOClient(new MtgIORestTemplate(restTemplate));
     MtgIO mtgIO = new MtgIO(client);
 
-    def "should find list with single CardSet when Rest answered with array of one CardSet"() {
+    def "findCardSetsByName should find list with single CardSet when Rest answered with array of one CardSet"() {
         given:
         givenSetsToBeReturnedByRestTemplate(sampleCommonSet);
         when:
@@ -23,7 +23,7 @@ class MtgIOTest extends Specification implements SampleCardSets {
         cardSets == List.of(sampleCommonSet)
     }
 
-    def "should find list with multiple CardSets when Rest answered with array of many CardSets"() {
+    def "findCardSetsByName should find list with multiple CardSets when Rest answered with array of many CardSets"() {
         given:
         givenSetsToBeReturnedByRestTemplate(sampleCommonSet, sampleMastersSet);
         when:
@@ -32,7 +32,7 @@ class MtgIOTest extends Specification implements SampleCardSets {
         cardSets == List.of(sampleCommonSet, sampleMastersSet)
     }
 
-    def "should find empty list when invoked with list without names"() {
+    def "findCardSetsByName should find empty list when invoked with list without names"() {
         given:
         givenSetsToBeReturnedByRestTemplate(sampleCommonSet, sampleMastersSet);
         when:
@@ -41,13 +41,22 @@ class MtgIOTest extends Specification implements SampleCardSets {
         cardSets == List.empty()
     }
 
-    def "should find empty list when invoked with null as list of names"() {
+    def "findCardSetsByName should find empty list when invoked with null as list of names"() {
         given:
         givenSetsToBeReturnedByRestTemplate(sampleCommonSet, sampleMastersSet);
         when:
         def cardSets = mtgIO.findCardSetsByName(null)
         then:
         cardSets == List.empty()
+    }
+
+    def "findAllCardSets should find list with multiple CardSets when Rest answered with array of many CardSets"() {
+        given:
+        givenSetsToBeReturnedByRestTemplate(sampleCommonSet, sampleMastersSet);
+        when:
+        def cardSets = mtgIO.findAllCardSets()
+        then:
+        cardSets == List.of(sampleCommonSet, sampleMastersSet)
     }
 
     private void givenSetsToBeReturnedByRestTemplate(CardSet... sets) {

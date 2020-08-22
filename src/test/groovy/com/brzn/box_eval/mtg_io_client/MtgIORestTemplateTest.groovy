@@ -1,11 +1,13 @@
 package com.brzn.box_eval.mtg_io_client
 
+import com.brzn.box_eval.cache.CardProvider
 import com.brzn.box_eval.mtgIOclient.domain.SampleCardSets
 import com.brzn.box_eval.mtg_io_client.dto.CardSet
 import com.brzn.box_eval.mtg_io_client.dto.CardSetsArray
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.collect.Lists
 import io.vavr.collection.HashSet
+import nl.altindag.log.LogCaptor
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -23,16 +25,19 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 class MtgIORestTemplateTest extends Specification implements SampleCardSets {
     public static final String GET_SETS_BY_NAMES_URL = "https://api.magicthegathering.io/v1/sets?name="
+    private static final String GET_ALL_CARDSETS = "https://api.magicthegathering.io/v1/sets";
+
     private RestTemplate restTemplate = new RestTemplate()
     private MockRestServiceServer mockServer;
-    MtgIORestTemplate mtgIORestTemplate = new MtgIORestTemplate(restTemplate);
+    private MtgIORestTemplate mtgIORestTemplate = new MtgIORestTemplate(restTemplate);
     private ObjectMapper objectMapper = new Jackson2ObjectMapperBuilder().simpleDateFormat("yyyy-MM-dd").build()
+    private LogCaptor<CardProvider> logCaptor = LogCaptor.forClass(MtgIORestTemplate.class);
 
     def setup() {
         mockServer = MockRestServiceServer.createServer(restTemplate);
     }
 
-    def "should return and deserialize sampleSet"() {
+    def "getCardSetsArrayByCardSetsNames should return and deserialize sampleSet"() {
         given:
         def searchedCardSets = HashSet.of(sampleCommonSet.name)
         def JSONCardSetArray = getJSONCardSetArrayFromCardSets(sampleCommonSet)
@@ -50,7 +55,39 @@ class MtgIORestTemplateTest extends Specification implements SampleCardSets {
         result == expectedCardSetsArray
     }
 
-    def "should return and deserialize array of sampleCommonSet and sampleMasterSet"() {
+    def "getCardSetsArrrayOfAllCardSets should return and deserialize sampleSet"() {
+        given:
+        def JSONCardSetArray = getJSONCardSetArrayFromCardSets(sampleCommonSet)
+        def expectedCardSetsArray = new CardSetsArray(Lists.newArrayList(sampleCommonSet))
+
+        mockServer.expect(requestTo(GET_ALL_CARDSETS))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(JSONCardSetArray));
+        when:
+        def result = mtgIORestTemplate.getCardSetsArrrayOfAllCardSets()
+        then:
+        mockServer.verify()
+        result == expectedCardSetsArray
+    }
+
+    def "getCardSetsArrrayOfAllCardSets should return empty CardSetsArray with log.info"() {
+        given:
+        mockServer.expect(requestTo(GET_ALL_CARDSETS))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(getJSONCardSetArrayFromCardSets()));
+        when:
+        def result = mtgIORestTemplate.getCardSetsArrrayOfAllCardSets()
+        then:
+        mockServer.verify()
+        result.getSets().isEmpty()
+        logCaptor.getLogs("info").contains(String.format("%s answered with empty list", GET_ALL_CARDSETS))
+    }
+
+    def "getCardSetsArrayByCardSetsNames should return and deserialize array of sampleCommonSet and sampleMasterSet"() {
         given:
         def searchedCardSets = HashSet.of(sampleCommonSet.name, sampleMastersSet.name)
         def JSONCardSetArray = getJSONCardSetArrayFromCardSets(sampleCommonSet, sampleMastersSet)

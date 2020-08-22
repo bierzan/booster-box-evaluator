@@ -10,8 +10,8 @@ class BoxCommand {
     private final BoxFinder finder;
     private final BoxRepository repository;
 
-    public void findNew(){
-        repository.saveAll(findLastReleasedBoxes());
+    public List<Long> findNew(){
+        return repository.saveAll(findLastReleasedBoxes());
     }
 
     private List<Box> findLastReleasedBoxes() {

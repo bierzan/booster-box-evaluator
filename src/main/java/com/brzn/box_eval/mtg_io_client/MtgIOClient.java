@@ -12,4 +12,8 @@ class MtgIOClient {
     List<CardSet> findCardSetsByName(SearchedCardSets searchedCardSets) {
         return List.ofAll(restTemplate.getCardSetsArrayByCardSetsNames(searchedCardSets.getNames()).getSets());
     }
+
+    public List<CardSet> findAllCardSets() {
+        return List.ofAll(restTemplate.getCardSetsArrrayOfAllCardSets().getSets());
+    }
 }

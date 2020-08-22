@@ -18,6 +18,6 @@ public class MtgIO {
     }
 
     public List<CardSet> findAllCardSets() {
-        return List.empty();
+        return client.findAllCardSets();
     }
 }
