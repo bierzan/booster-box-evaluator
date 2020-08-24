@@ -58,4 +58,7 @@ class CardSetsArrayDeserializerTest extends Specification {
         then:
         result == cardSetsArray
     }
+
+    //todo test na brak pola booster -1
+    //todo test na booster w postaci pustej listy -1
 }

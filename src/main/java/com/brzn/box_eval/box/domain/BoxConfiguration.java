@@ -19,7 +19,8 @@ class BoxConfiguration {
 
     @Bean
     BoxFacade boxFacade(BoxRepository repository) {
-        BoxCreator creator = new BoxCreator();
+        BoosterSchemaCreator boosterSchemaCreator = new BoosterSchemaCreator();
+        BoxCreator creator = new BoxCreator(boosterSchemaCreator);
         BoxFinder finder = new BoxFinder(cardProvider, mtgIO, creator);
         BoxCommand command = new BoxCommand(finder, repository);
         return new BoxFacade(command, repository);

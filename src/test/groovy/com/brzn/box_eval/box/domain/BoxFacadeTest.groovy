@@ -16,7 +16,7 @@ class BoxFacadeTest extends Specification implements SampleBoxes, CachedCards {
 
     CardProvider cardProvider = Mock(CardProvider)
     MtgIO mtgIO = Mock(MtgIO);
-    BoxCreator boxCreator = new BoxCreator()
+    BoxCreator boxCreator = new BoxCreator(new BoosterSchemaCreator())
     BoxRepository repository
 
     def "should fill empty Box inventory with recently released boxes"() {

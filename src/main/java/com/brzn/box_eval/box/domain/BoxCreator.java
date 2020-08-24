@@ -1,22 +1,13 @@
 package com.brzn.box_eval.box.domain;
 
-import com.brzn.box_eval.box.dto.BoxDto;
 import com.brzn.box_eval.mtg_io_client.dto.CardSet;
 import com.brzn.box_eval.mtg_io_client.dto.CardSetType;
-import com.google.gson.Gson;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor //todo definicja beana
 class BoxCreator {
 
-    private Gson gson = new Gson();
-
-    Box from(BoxDto boxDto) {
-        return Box.builder()
-                .id(boxDto.getId())
-                .cardSetName(boxDto.getCardSetName())
-                .booster(boxDto.getBooster())
-                .releaseDate(boxDto.getReleaseDate())
-                .build();
-    }
+    private final BoosterSchemaCreator boosterSchemaCreator;
 
     Box from(CardSet cardSet) {
         return Box.builder()
@@ -24,6 +15,7 @@ class BoxCreator {
                 .cardSetName(cardSet.getName())
                 .cardSetCode(cardSet.getCode())
                 .boosterQuantity(getQuantityBySetType(cardSet))
+                .boosterSchema(boosterSchemaCreator.from(cardSet.getBooster()))
                 .build();
     }
 

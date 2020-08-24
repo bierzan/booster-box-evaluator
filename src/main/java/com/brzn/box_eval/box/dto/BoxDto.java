@@ -1,5 +1,6 @@
 package com.brzn.box_eval.box.dto;
 
+import com.brzn.box_eval.box.vo.BoosterSchema;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
@@ -13,7 +14,7 @@ public class BoxDto {
     long id;
     String cardSetName;
     @ToString.Exclude
-    Booster booster;
+    BoosterSchema boosterSchema;
     LocalDate releaseDate;
 }
 
