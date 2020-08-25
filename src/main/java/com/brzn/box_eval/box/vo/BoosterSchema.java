@@ -9,4 +9,8 @@ import lombok.Value;
 @Getter(AccessLevel.NONE)
 public class BoosterSchema {
     List<CardSlot> cardSlots;
+
+    public boolean isEmpty() {
+        return cardSlots == null || cardSlots.isEmpty();
+    }
 }
