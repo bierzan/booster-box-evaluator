@@ -59,6 +59,16 @@ class CardSetsArrayDeserializerTest extends Specification {
         result == cardSetsArray
     }
 
-    //todo test na brak pola booster -1
-    //todo test na booster w postaci pustej listy -1
+    def "should deserialize empty booster node"() {
+        given:
+        String JSONresponse ="{\"sets\":[{\"booster\":[]}]}";
+        CardSet cardSet = CardSet.builder()
+                .booster(Lists.newArrayList().toArray() as String[][])
+                .build()
+        CardSetsArray cardSetsArray = new CardSetsArray(Lists.newArrayList(cardSet))
+        when:
+        def result = mapper.readValue(JSONresponse, CardSetsArray)
+        then:
+        result == cardSetsArray
+    }
 }
