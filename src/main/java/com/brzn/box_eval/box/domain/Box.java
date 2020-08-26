@@ -19,11 +19,11 @@ class Box { //todo rozbic na encje + i encje bazodanowa
     private long id;
     private String cardSetName;
     private String cardSetCode;
-    private String cardSetBlock; //todo czy zostaje jako string?
     private BoxCardSetType boxCardSetType;
     private LocalDate releaseDate;
     private String type;
     private BoosterSchema boosterSchema;
+    private int boosterQuantity;
 
     BoxDto dto() {
         return BoxDto.builder()

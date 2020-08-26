@@ -1,5 +1,7 @@
 package com.brzn.box_eval.box.dto;
 
+import java.util.Arrays;
+
 public enum BoxCardSetType {
     CORE,
     EXPANSION,
@@ -16,4 +18,11 @@ public enum BoxCardSetType {
     PROMO,
     VANGUARD,
     MASTERS;
+
+    public static BoxCardSetType getMatchingType(String searchedType) {
+        return Arrays.stream(BoxCardSetType.values())
+                .filter(type -> type.toString().equals(searchedType))
+                .findFirst()
+                .orElse(null);
+    }
 }
