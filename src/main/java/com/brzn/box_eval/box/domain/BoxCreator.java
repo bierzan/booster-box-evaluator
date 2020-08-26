@@ -1,10 +1,12 @@
 package com.brzn.box_eval.box.domain;
 
+import com.brzn.box_eval.box.dto.BoxCardSetType;
 import com.brzn.box_eval.mtg_io_client.dto.CardSet;
-import com.brzn.box_eval.mtg_io_client.dto.CardSetType;
 import lombok.AllArgsConstructor;
 
-@AllArgsConstructor //todo definicja beana
+import java.util.Arrays;
+
+@AllArgsConstructor
 class BoxCreator {
 
     private final BoosterSchemaCreator boosterSchemaCreator;
@@ -14,17 +16,16 @@ class BoxCreator {
                 .releaseDate(cardSet.getReleaseDate())
                 .cardSetName(cardSet.getName())
                 .cardSetCode(cardSet.getCode())
-                .boosterQuantity(getQuantityBySetType(cardSet))
+                .cardSetBlock(cardSet.getBlock())
+                .boxCardSetType(from(cardSet.getType()))
                 .boosterSchema(boosterSchemaCreator.from(cardSet.getBooster()))
                 .build();
     }
 
-    private short getQuantityBySetType(CardSet cardSet) { //todo unit test dla nulla
-        if (cardSet.getBlock().equals("Conspiracy")) {
-            return 24;
-        } else {
-            return (short) (cardSet.getType().equals(CardSetType.MASTERS) ? 24 : 36);
-        }
+    private BoxCardSetType from(com.brzn.box_eval.mtg_io_client.dto.CardSetType cardSetType) {
+        return Arrays.stream(BoxCardSetType.values())
+                .filter(type -> type.toString().equals(cardSetType.toString()))
+                .findFirst()
+                .orElse(null);
     }
-
 }

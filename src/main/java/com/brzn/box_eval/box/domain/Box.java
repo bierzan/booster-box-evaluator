@@ -1,5 +1,6 @@
 package com.brzn.box_eval.box.domain;
 
+import com.brzn.box_eval.box.dto.BoxCardSetType;
 import com.brzn.box_eval.box.dto.BoxDto;
 import com.brzn.box_eval.box.vo.BoosterSchema;
 import lombok.Builder;
@@ -18,12 +19,13 @@ class Box { //todo rozbic na encje + i encje bazodanowa
     private long id;
     private String cardSetName;
     private String cardSetCode;
+    private String cardSetBlock; //todo czy zostaje jako string?
+    private BoxCardSetType boxCardSetType;
     private LocalDate releaseDate;
     private String type;
     private BoosterSchema boosterSchema;
-    private short boosterQuantity;
 
-    BoxDto dto(){
+    BoxDto dto() {
         return BoxDto.builder()
                 .id(id)
                 .cardSetName(cardSetName)
