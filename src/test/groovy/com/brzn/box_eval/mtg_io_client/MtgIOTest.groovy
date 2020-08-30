@@ -1,5 +1,6 @@
 package com.brzn.box_eval.mtg_io_client
 
+
 import com.brzn.box_eval.mtgIOclient.domain.SampleCardSets
 import com.brzn.box_eval.mtg_io_client.dto.CardSet
 import com.brzn.box_eval.mtg_io_client.dto.CardSetsArray
@@ -11,8 +12,7 @@ import spock.lang.Specification
 class MtgIOTest extends Specification implements SampleCardSets {
 
     RestTemplate restTemplate = Mock(RestTemplate)
-    MtgIOClient client = new MtgIOClient(new MtgIORestTemplate(restTemplate));
-    MtgIO mtgIO = new MtgIO(client);
+    MtgIO mtgIO = new MtgIO(new MtgIORestTemplate(restTemplate));
 
     def "findCardSetsByName should find list with single CardSet when Rest answered with array of one CardSet"() {
         given:

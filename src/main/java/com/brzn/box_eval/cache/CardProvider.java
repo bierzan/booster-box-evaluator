@@ -1,6 +1,6 @@
 package com.brzn.box_eval.cache;
 
-import com.brzn.box_eval.cache.dto.Card;
+import com.brzn.box_eval.scryfall_client.dto.Card;
 import io.vavr.collection.List;
 import io.vavr.control.Option;
 import lombok.AllArgsConstructor;

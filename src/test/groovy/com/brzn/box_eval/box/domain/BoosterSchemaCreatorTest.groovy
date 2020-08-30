@@ -4,8 +4,9 @@ import com.brzn.box_eval.box.dto.CardRarity
 import com.brzn.box_eval.box.vo.BoosterSchema
 import com.brzn.box_eval.box.vo.CardSlot
 import com.google.common.collect.Lists
-import io.vavr.collection.Set
+import io.vavr.collection.HashSet
 import io.vavr.collection.List
+import io.vavr.collection.Set
 import spock.lang.Specification
 
 import static com.brzn.box_eval.box.dto.CardRarity.*

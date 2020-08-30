@@ -1,6 +1,6 @@
 package com.brzn.box_eval.cache;
 
-import com.brzn.box_eval.cache.dto.Card;
+import com.brzn.box_eval.scryfall_client.dto.Card;
 import io.vavr.collection.List;
 
 import java.time.LocalDate;
@@ -24,5 +24,9 @@ class CardCache {
 
     public void add(Card card){
         cardCache = cardCache.append(card);
+    }
+
+    public void replace(List<Card> cards){
+        cardCache = cards;
     }
 }

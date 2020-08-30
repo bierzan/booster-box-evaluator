@@ -6,11 +6,11 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 
-public class ScryfallClient {
+class ScryfallRestTemplate {
 
     private RestTemplate restTemplate;
 
-    public ScryfallClient(RestTemplate restTemplate) {
+    public ScryfallRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

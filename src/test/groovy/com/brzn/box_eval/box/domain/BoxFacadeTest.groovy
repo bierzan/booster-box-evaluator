@@ -2,10 +2,10 @@ package com.brzn.box_eval.box.domain
 
 import com.brzn.box_eval.cache.CachedCards
 import com.brzn.box_eval.cache.CardProvider
-import com.brzn.box_eval.cache.dto.Card
-import com.brzn.box_eval.mtg_io_client.MtgIO
+import com.brzn.box_eval.infrastructure.client.RestClient
 import com.brzn.box_eval.mtg_io_client.dto.CardSet
 import com.brzn.box_eval.mtg_io_client.dto.CardSetType
+import com.brzn.box_eval.scryfall_client.dto.Card
 import io.vavr.collection.List
 import io.vavr.collection.Set
 import spock.lang.Specification
@@ -15,7 +15,7 @@ import java.time.LocalDate
 class BoxFacadeTest extends Specification implements SampleBoxes, CachedCards {
 
     CardProvider cardProvider = Mock(CardProvider)
-    MtgIO mtgIO = Mock(MtgIO);
+    RestClient client = Mock(RestClient);
     BoxCreator boxCreator = new BoxCreator(new BoosterSchemaCreator())
     BoxRepository repository
 
@@ -25,7 +25,7 @@ class BoxFacadeTest extends Specification implements SampleBoxes, CachedCards {
         and: "All CardSets"
         def todaySet = cardSetFrom(todayCard)
         def lastWeekSet = cardSetFrom(lastWeekCard)
-        mtgIO.findAllCardSets() >> List.of(todaySet, lastWeekSet)
+        client.findAllCardSets() >> List.of(todaySet, lastWeekSet)
 
         when: "I invoke findNew"
         createBoxFacade(repository).findNew()
@@ -43,7 +43,7 @@ class BoxFacadeTest extends Specification implements SampleBoxes, CachedCards {
         and: "CardSets containing provided cards"
         def todaySet = cardSetFrom(todayCard)
         def lastWeekSet = cardSetFrom(lastWeekCard)
-        mtgIO.findCardSetsByName(_ as Set<String>) >> List.of(todaySet, lastWeekSet)
+        client.findCardSetsByName(_ as Set<String>) >> List.of(todaySet, lastWeekSet)
 
         when: "I invoke findNew"
         createBoxFacade(repository).findNew()
@@ -64,7 +64,7 @@ class BoxFacadeTest extends Specification implements SampleBoxes, CachedCards {
         and: "Data from REST clients confirming no new releases"
         cardProvider.findCardsReleasedAfter(_ as LocalDate) >> List.empty()
         and: "Empty list of Cardsets as there were no new releases"
-        mtgIO.findCardSetsByName(_ as Set<String>) >> List.empty();
+        client.findCardSetsByName(_ as Set<String>) >> List.empty();
 
         when: "I invoke findNew"
         createBoxFacade(repository).findNew()
@@ -75,7 +75,7 @@ class BoxFacadeTest extends Specification implements SampleBoxes, CachedCards {
     }
 
     def createBoxFacade(BoxRepository repo) {
-        BoxFinder finder = new BoxFinder(cardProvider, mtgIO, boxCreator);
+        BoxFinder finder = new BoxFinder(cardProvider, client, boxCreator);
         BoxCommand command = new BoxCommand(finder, repo)
         return new BoxFacade(command, repo)
     }

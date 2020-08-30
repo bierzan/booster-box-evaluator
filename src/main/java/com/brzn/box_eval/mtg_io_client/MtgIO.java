@@ -7,17 +7,17 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class MtgIO {
-    private final MtgIOClient client;
+    private final MtgIORestTemplate restTemplate;
 
     public List<CardSet> findCardSetsByName(Set<String> setNames) {
         SearchedCardSets searchedCardSets = new SearchedCardSets(setNames);
         if (searchedCardSets.hasValidSetNames()) {
-            return client.findCardSetsByName(searchedCardSets);
+            return List.ofAll(restTemplate.getCardSetsArrayByCardSetsNames(searchedCardSets.getNames()).getSets());
         }
         return List.empty();
     }
 
     public List<CardSet> findAllCardSets() {
-        return client.findAllCardSets();
+        return List.ofAll(restTemplate.getCardSetsArrrayOfAllCardSets().getSets());
     }
 }
