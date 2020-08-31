@@ -13,9 +13,11 @@ public class BoxDto {
     @ToString.Exclude
     long id;
     String cardSetName;
-    @ToString.Exclude
-    BoosterSchema boosterSchema;
+    String cardSetCode;
+    BoxCardSetType boxCardSetType;
     LocalDate releaseDate;
+    BoosterSchema boosterSchema;
+    int boosterQuantity;
 }
 
 

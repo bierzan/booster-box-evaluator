@@ -54,7 +54,7 @@ class BoxFacadeTest extends Specification implements SampleBoxes, CachedCards {
         repository.findAll().contains(boxCreator.from(lastWeekSet))
         then: "I see that new Boxes were released after oldBox"
         repository.findAll().each { box ->
-            oldBox.getReleaseDate().isBefore((box as Box).releaseDate)
+            oldBox.dto().releaseDate.isBefore((box as Box).dto().releaseDate)
         }
     }
 

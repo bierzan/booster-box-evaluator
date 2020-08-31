@@ -7,50 +7,65 @@ import spock.lang.Specification
 class BoxCreatorBoosterQuantityTest extends Specification {
     def boosterSchemaCreator = Mock(BoosterSchemaCreator)
     def creator = new BoxCreator(boosterSchemaCreator)
+    def box
+    def cardSet
 
-    def "should create Box with boosterQuantity of 24 for Conspiracy block"(){
+    def "should create Box with boosterQuantity of 24 for Conspiracy block"() {
         given:
-        def cardSet = CardSet.builder()
+        cardSet = CardSet.builder()
                 .block("Conspiracy")
                 .build()
         when:
-        Box box = creator.from(cardSet)
+        createsBoosterFromCardSet()
         then:
-        box.getBoosterQuantity() == 24
+        getBoosterQuantity() == 24
     }
 
-    def "should create Box with boosterQuantity of 36 for standardBlock"(){
+    def "should create Box with boosterQuantity of 36 for standardBlock"() {
         given:
-        def cardSet = CardSet.builder()
+        cardSet = CardSet.builder()
                 .block("standardBlock")
                 .build()
         when:
-        Box box = creator.from(cardSet)
+        createsBoosterFromCardSet()
         then:
-        box.getBoosterQuantity() == 36
+        getBoosterQuantity() == 36
     }
 
-    def "should create Box with boosterQuantity of 24 for standardBlock and Masters set"(){
+    def "should create Box with boosterQuantity of 24 for standardBlock and Masters set"() {
         given:
-        def cardSet = CardSet.builder()
+        cardSet = CardSet.builder()
                 .block("standardBlock")
                 .type(CardSetType.MASTERS)
                 .build()
         when:
-        Box box = creator.from(cardSet)
+        createsBoosterFromCardSet()
         then:
-        box.getBoosterQuantity() == 24
+        getBoosterQuantity() == 24
     }
 
-    def "should create Box with boosterQuantity of 36 for standardBlock and any other set"(){
+
+    def "should create Box with boosterQuantity of 36 for standardBlock and any other set"() {
         given:
-        def cardSet = CardSet.builder()
+        cardSet = CardSet.builder()
                 .block("standardBlock")
                 .type(CardSetType.CORE)
                 .build()
         when:
-        Box box = creator.from(cardSet)
+        createsBoosterFromCardSet()
         then:
-        box.getBoosterQuantity() == 36
+        getBoosterQuantity() == 36
+    }
+
+    def createsBoosterFromCardSet() {
+        box = creator.from(cardSet as CardSet)
+    }
+
+    private int getBoosterQuantity() {
+        (box as Box).dto().boosterQuantity
+    }
+
+    def verifyBoosterQuantity(int expectedQuantity) {
+        return (box as Box).dto().boosterQuantity == expectedQuantity
     }
 }
