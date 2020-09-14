@@ -8,6 +8,6 @@ import lombok.AllArgsConstructor;
 public class Scryfall {
     private final ScryfallRestTemplate restTemplate;
     public List<Card> getCards() { //todo testy i implementacja
-        return restTemplate.getAllCards();
+        return null;
     }
 }

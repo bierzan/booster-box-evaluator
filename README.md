@@ -1,5 +1,4 @@
-# booster-box-evaluator
-
+# MtG.Box.Evaluator
 *Application in development stage*
 
 Application to estimate, store and analyze MTG box set value.
