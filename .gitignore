@@ -30,4 +30,5 @@ hs_err_pid*
 /.idea/
 target/
 
-/uml/
+/booster-box-evaluator.plantuml
+/src/main/java/com/brzn/box_eval/**/*.plantuml

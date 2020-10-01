@@ -1,0 +1,58 @@
+@startuml
+skinparam responseMessageBelowArrow true
+
+control Scheduler
+participant "BoxFacade" as Facade
+participant "BoxCommand" as Command
+participant "BoxFinder" as Finder
+participant "CardProvider" as Provider
+participant "BoxCreator" as Creator
+boundary Client
+database "CardCache" as cache order 150
+database "BoxRepo" as Repo order 200
+
+
+
+Scheduler -> Facade: findNew()
+Facade -> Command: findNew()
+
+activate Command
+Command -> Repo:findLastReleaseDate()
+Command <-- Repo: date
+
+alt dateWasFound case
+Command -> Finder: findBoxesReleasedAfter\n(date)
+activate Finder
+Finder -> Provider: findCardsReleasedAfter\n(date)
+activate Provider
+Provider -> cache: findCardsReleasedAfter(date)
+Provider <-- cache: cards
+Finder <-- Provider: cards
+deactivate Provider
+Finder -> Finder: getSetNames(cards)
+Finder -> Client: findCardSetsByNames\n(setNames)
+Finder <--Client: cardSets
+Finder -> Creator: from(cardSets)
+Finder <-- Creator: boxes
+Command <-- Finder: boxes
+deactivate Finder
+
+else dateNotFound
+Command -> Finder: findAllBoxes
+activate Finder
+Finder -> Client: findAllCardSets()
+Finder <--Client: setNames
+Finder -> Creator: from(setNames)
+Finder <-- Creator: boxes
+Command <-- Finder: allBoxes
+deactivate Finder
+end
+
+Command -> Repo: saveAll(boxes)
+Command <-- Repo: newBoxIds
+
+
+Facade <-- Command: newBoxIds
+deactivate Command
+
+@enduml

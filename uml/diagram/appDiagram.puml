@@ -1,0 +1,98 @@
+@startuml
+
+hide empty members
+
+package infrastructure{
+    class Client{
+    }
+    class Cache{
+    }
+}
+
+together {
+package MtgIO {
+    class MtgIO{
+        +getSets(setNames)
+    }
+
+    class CardSet {
+    -name
+    -code
+    -booster
+    -expansion
+    }
+}
+
+package Scryfall {
+    class ScryfallClient{
+        +getAllCards()
+    }
+
+    class Card {
+    -name
+    -setName
+    -price
+    }
+}
+}
+package box {
+		class Box {
+    		-id
+    		-name
+    		-booster
+    		-expansion
+    		-releaseDate
+    	}
+
+	class BoxFacade{
+		+findNew()
+'        +evaluateBoxes()
+'        +getBoxValue(boxName)
+	}
+
+	class Command{
+    	~findNew()
+'		~evaluateAll()
+	}
+
+    class Query{
+    	~getBoxValue(boxName)
+	}
+
+    class BoxFinder {
+		~findBoxesReleasedAfter(date)
+		-getSetsNamesFromCards(cards)
+	}
+
+	class BoxCreator {
+		~createBoxes(sets)
+	}
+
+    together {
+	    interface BoxRepo{
+        	+findAll()
+	    	+findLastReleaseDate()
+	    	+saveAll(boxes)
+	    }
+
+        interface BoxValueRepo{
+	    	+saveAll(boxesValues)
+	    }
+	}
+}
+BoxFacade <.. Command
+BoxFacade <.. Query
+
+Query <.. BoxValueRepo
+
+Command <.. BoxRepo
+Command <.. BoxFinder
+
+BoxFinder <.. Cache: getCards
+BoxFinder <.. Client: getCardSets and Cards
+BoxFinder <.. BoxCreator: createBoxes(cards)
+
+Client <..MtgIO
+Client <..Scryfall
+
+@enduml
