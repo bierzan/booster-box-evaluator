@@ -4,6 +4,7 @@ import com.brzn.box_eval.mtg_io_client.MtgIO;
 import com.brzn.box_eval.mtg_io_client.dto.CardSet;
 import com.brzn.box_eval.scryfall_client.Scryfall;
 import com.brzn.box_eval.scryfall_client.dto.Card;
+import com.brzn.box_eval.scryfall_client.dto.CardBulkDataInfo;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 import lombok.AllArgsConstructor;
@@ -27,5 +28,10 @@ public class RestClient implements Client {
     @Override
     public List<Card> getAllCards() {
         return scryfall.getAllCards(); //todo implementacja
+    }
+
+    @Override
+    public CardBulkDataInfo getCardBulkDataInfo() {
+        return scryfall.getCardBulkDataInfo();
     }
 }

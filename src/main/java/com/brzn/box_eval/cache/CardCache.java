@@ -4,8 +4,10 @@ import com.brzn.box_eval.scryfall_client.dto.Card;
 import io.vavr.collection.List;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 class CardCache {
+    private LocalDateTime updateDate;
     private List<Card> cardCache;
 
     public CardCache() {
