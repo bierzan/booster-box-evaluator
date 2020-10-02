@@ -25,7 +25,7 @@ public class RestClient implements Client {
     }
 
     @Override
-    public List<Card> getCards() {
-        return scryfall.getCards(); //todo implementacja
+    public List<Card> getAllCards() {
+        return scryfall.getAllCards(); //todo implementacja
     }
 }

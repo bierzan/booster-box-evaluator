@@ -10,6 +10,6 @@ class CardCacheCommand {
     private final CardCache cache;
 
     public void update() {
-        cache.replace(client.getCards());
+        cache.replace(client.getAllCards());
     }
 }

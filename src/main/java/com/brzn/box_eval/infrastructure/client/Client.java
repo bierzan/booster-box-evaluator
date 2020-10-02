@@ -11,5 +11,5 @@ public interface Client {
 
     List<CardSet> findAllCardSets();
 
-    List<Card> getCards();
+    List<Card> getAllCards();
 }
