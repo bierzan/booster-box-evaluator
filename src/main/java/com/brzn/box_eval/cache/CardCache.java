@@ -11,6 +11,7 @@ class CardCache {
     private List<Card> cardCache;
 
     public CardCache() {
+        updateDate = LocalDateTime.now();
         cardCache = List.empty();
     }
 
@@ -28,7 +29,15 @@ class CardCache {
         cardCache = cardCache.append(card);
     }
 
-    public void replace(List<Card> cards){
+    public void replaceContent(List<Card> cards){
         cardCache = cards;
+    }
+
+    public boolean isOlderThan(LocalDateTime updatedAt) { //todo test
+        return updateDate.isBefore(updatedAt);
+    }
+
+    public void updateFromFile() {
+
     }
 }

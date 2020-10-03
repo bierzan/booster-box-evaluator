@@ -9,6 +9,8 @@ import io.vavr.collection.List;
 import io.vavr.collection.Set;
 import lombok.AllArgsConstructor;
 
+import java.net.URI;
+
 @AllArgsConstructor
 public class RestClient implements Client {
 
@@ -26,12 +28,12 @@ public class RestClient implements Client {
     }
 
     @Override
-    public List<Card> getAllCards() {
-        return scryfall.getAllCards(); //todo implementacja
+    public CardBulkDataInfo getCardBulkDataInfo() {
+        return scryfall.getCardBulkDataInfo();
     }
 
     @Override
-    public CardBulkDataInfo getCardBulkDataInfo() {
-        return scryfall.getCardBulkDataInfo();
+    public List<Card> getCardsFromURI(URI uri) {
+        return null;
     }
 }

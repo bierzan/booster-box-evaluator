@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class CardCacheFacade {
-    private final CardCacheCommand command;
+    private final CardCacheUpdater command;
 
     public void updateCache(){
         command.update();
