@@ -1,4 +1,4 @@
-package com.brzn.box_eval.cache;
+package com.brzn.box_eval.card.domain;
 
 import com.brzn.box_eval.infrastructure.client.Client;
 import com.brzn.box_eval.scryfall_client.dto.Card;
@@ -16,17 +16,17 @@ import java.net.URL;
 
 @Slf4j
 @AllArgsConstructor
-class CardCacheUpdater {
+class CardUpdater {
 
     private final Client client;
-    private final CardCache cache;
+    private final CardRepository repo;
     private final ObjectMapper mapper;
 
     public void update() {
         CardBulkDataInfo bulkData = client.getCardBulkDataInfo();
-        if (cache.isOlderThan(bulkData.getUpdatedAt())) {
+        if (repo.isOlderThan(bulkData.getUpdatedAt())) {
             downloadRecentCardsData(bulkData.getDownloadUrl());
-            updateCardsCacheFromFile();
+            updateCardRepoFromFile();
         }
     }
 
@@ -40,11 +40,11 @@ class CardCacheUpdater {
         }
     }
 
-    private void updateCardsCacheFromFile() {
+    private void updateCardRepoFromFile() {
         try {
             log.info("Updating CardCache with card data from cards.json file");
             List<Card> cards = mapper.readValue("cards.json", new TypeReference<List<Card>>() {});
-            cache.replaceContent(cards);
+            repo.replaceContent(cards);
         } catch (IOException e) {
             log.info("Can't parse json file to <List<Card>>. CardCache update failed");
             e.printStackTrace();

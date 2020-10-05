@@ -31,9 +31,4 @@ public class RestClient implements Client {
     public CardBulkDataInfo getCardBulkDataInfo() {
         return scryfall.getCardBulkDataInfo();
     }
-
-    @Override
-    public List<Card> getCardsFromURI(URI uri) {
-        return null;
-    }
 }

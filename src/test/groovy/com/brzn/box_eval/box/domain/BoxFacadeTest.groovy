@@ -1,7 +1,7 @@
 package com.brzn.box_eval.box.domain
 
-import com.brzn.box_eval.cache.CachedCards
-import com.brzn.box_eval.cache.CardProvider
+import com.brzn.box_eval.card.domain.CachedCards
+import com.brzn.box_eval.card.domain.CardProvider
 import com.brzn.box_eval.infrastructure.client.RestClient
 import com.brzn.box_eval.mtg_io_client.dto.CardSet
 import com.brzn.box_eval.mtg_io_client.dto.CardSetType

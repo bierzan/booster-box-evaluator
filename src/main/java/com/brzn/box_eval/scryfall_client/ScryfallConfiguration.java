@@ -16,7 +16,7 @@ class ScryfallConfiguration {
             return execution.execute(request, body);
         });
         ScryfallRestTemplate scryfallRestTemplate = new ScryfallRestTemplate(restTemplate);
-        return new Scryfall(scryfallRestTemplate, new ObjectMapper());
+        return new Scryfall(scryfallRestTemplate);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.brzn.box_eval.box.domain;
 
-import com.brzn.box_eval.cache.CardProvider;
+import com.brzn.box_eval.card.domain.CardFacade;
 import com.brzn.box_eval.infrastructure.client.Client;
 import com.brzn.box_eval.scryfall_client.dto.Card;
 import io.vavr.collection.List;
@@ -11,12 +11,12 @@ import java.time.LocalDate;
 
 @AllArgsConstructor
 class BoxFinder {
-    private final CardProvider cardProvider;
+    private final CardFacade cardFacade;
     private final Client client;
     private final BoxCreator creator;
 
     public List<Box> findBoxesReleasedAfter(LocalDate date) {
-        Set<String> setNames = cardProvider.findCardsReleasedAfter(date)
+        Set<String> setNames = cardFacade.findCardsReleasedAfter(date)
                 .map(Card::getSetName)
                 .toSet();
         return client.findCardSetsByName(setNames)

@@ -1,4 +1,4 @@
-package com.brzn.box_eval.cache;
+package com.brzn.box_eval.card.domain;
 
 import com.brzn.box_eval.scryfall_client.dto.Card;
 import io.vavr.collection.List;
@@ -10,16 +10,12 @@ import java.time.LocalDate;
 
 @Slf4j
 @AllArgsConstructor
-public class CardProvider {
-    private final CardCache cache;
-
-    private CardProvider() {
-        this.cache = new CardCache();
-    }
+class CardProvider {
+    private final CardRepository repo;
 
     public List<Card> findCardsReleasedAfter(LocalDate date) {
         return Option.of(date)
-                .map(cache::findCardsReleasedAfter)
+                .map(repo::findCardsReleasedAfter)
                 .getOrElse(() -> {
                     log.warn("date can't be null");
                     return List.empty();
@@ -27,6 +23,6 @@ public class CardProvider {
     }
 
     public List<Card> getAll() {
-        return cache.getAll();
+        return repo.getAll();
     }
 }

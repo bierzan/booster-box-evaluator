@@ -1,4 +1,4 @@
-package com.brzn.box_eval.cache;
+package com.brzn.box_eval.card.domain;
 
 import com.brzn.box_eval.scryfall_client.dto.Card;
 import io.vavr.collection.List;
@@ -6,38 +6,35 @@ import io.vavr.collection.List;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-class CardCache {
+class InMemoryCardRepository implements CardRepository {
     private LocalDateTime updateDate;
     private List<Card> cardCache;
 
-    public CardCache() {
-        updateDate = LocalDateTime.now();
+    public InMemoryCardRepository() {
+        updateDate = LocalDateTime.MIN;
         cardCache = List.empty();
     }
 
-    List<Card> findCardsReleasedAfter(LocalDate date){
+    @Override
+    public List<Card> findCardsReleasedAfter(LocalDate date){
         return cardCache
                 .filter(card -> card.getReleasedAt().isAfter(date))
                 .toList();
     }
 
-    List<Card> getAll(){
+    @Override
+    public List<Card> getAll(){
         return cardCache;
     }
 
-    public void add(Card card){
-        cardCache = cardCache.append(card);
-    }
-
+    @Override
     public void replaceContent(List<Card> cards){
         cardCache = cards;
+        updateDate = LocalDateTime.now();
     }
 
+    @Override
     public boolean isOlderThan(LocalDateTime updatedAt) { //todo test
         return updateDate.isBefore(updatedAt);
-    }
-
-    public void updateFromFile() {
-
     }
 }
