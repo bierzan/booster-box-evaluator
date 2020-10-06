@@ -1,6 +1,6 @@
 package com.brzn.box_eval.mtgIOclient.domain
 
-import com.brzn.box_eval.cache.CachedCards
+import com.brzn.box_eval.card.domain.SampleCards
 import com.brzn.box_eval.mtg_io_client.dto.CardSet
 import com.brzn.box_eval.mtg_io_client.dto.CardSetType
 import groovy.transform.CompileStatic
@@ -8,7 +8,7 @@ import groovy.transform.CompileStatic
 import java.time.LocalDate
 
 @CompileStatic
-trait SampleCardSets implements CachedCards {
+trait SampleCardSets implements SampleCards {
 
     CardSet sampleCommonSet = CardSet.builder()
             .code("ss")

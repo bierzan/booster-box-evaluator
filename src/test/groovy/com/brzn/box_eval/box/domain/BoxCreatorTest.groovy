@@ -2,11 +2,11 @@ package com.brzn.box_eval.box.domain
 
 import com.brzn.box_eval.box.dto.BoxCardSetType
 import com.brzn.box_eval.box.vo.BoosterSchema
-import com.brzn.box_eval.card.domain.CachedCards
+import com.brzn.box_eval.card.domain.SampleCards
 import com.brzn.box_eval.mtgIOclient.domain.SampleCardSets
 import spock.lang.Specification
 
-class BoxCreatorTest extends Specification implements SampleCardSets, CachedCards { //todo rename
+class BoxCreatorTest extends Specification implements SampleCardSets, SampleCards {
 
     def boosterSchemaCreator = Mock(BoosterSchemaCreator)
     def creator = new BoxCreator(boosterSchemaCreator);

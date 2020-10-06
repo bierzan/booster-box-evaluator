@@ -6,7 +6,7 @@ import groovy.transform.CompileStatic
 import java.time.LocalDate
 
 @CompileStatic
-trait CachedCards {
+trait SampleCards {
     Card todayCard = Card.builder()
             .name("todayCard")
             .releasedAt(LocalDate.now())

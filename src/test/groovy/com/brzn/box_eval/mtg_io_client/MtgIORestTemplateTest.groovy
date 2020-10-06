@@ -1,6 +1,6 @@
 package com.brzn.box_eval.mtg_io_client
 
-import com.brzn.box_eval.cache.CardProvider
+import com.brzn.box_eval.card.domain.CardProvider
 import com.brzn.box_eval.mtgIOclient.domain.SampleCardSets
 import com.brzn.box_eval.mtg_io_client.dto.CardSet
 import com.brzn.box_eval.mtg_io_client.dto.CardSetsArray
@@ -27,15 +27,11 @@ class MtgIORestTemplateTest extends Specification implements SampleCardSets {
     public static final String GET_SETS_BY_NAMES_URL = "https://api.magicthegathering.io/v1/sets?name="
     private static final String GET_ALL_CARDSETS = "https://api.magicthegathering.io/v1/sets";
 
-    private RestTemplate restTemplate = new RestTemplate()
-    private MockRestServiceServer mockServer;
-    private MtgIORestTemplate mtgIORestTemplate = new MtgIORestTemplate(restTemplate);
-    private ObjectMapper objectMapper = new Jackson2ObjectMapperBuilder().simpleDateFormat("yyyy-MM-dd").build()
-    private LogCaptor<CardProvider> logCaptor = LogCaptor.forClass(MtgIORestTemplate.class);
-
-    def setup() {
-        mockServer = MockRestServiceServer.createServer(restTemplate);
-    }
+    def restTemplate = new RestTemplate()
+    def mockServer = MockRestServiceServer.createServer(restTemplate);
+    def mtgIORestTemplate = new MtgIORestTemplate(restTemplate);
+    def objectMapper = new Jackson2ObjectMapperBuilder().simpleDateFormat("yyyy-MM-dd").build()
+    def logCaptor = LogCaptor.forClass(MtgIORestTemplate.class);
 
     def "getCardSetsArrayByCardSetsNames should return and deserialize sampleSet"() {
         given:
@@ -105,7 +101,7 @@ class MtgIORestTemplateTest extends Specification implements SampleCardSets {
         result == expectedCardSets
     }
 
-    private String encodeURLQuery(String... setNames) {
+    def encodeURLQuery(String... setNames) {
         def setNamesAsSingleString = Arrays.asList(setNames)
                 .reverse()
                 .stream()
@@ -113,7 +109,7 @@ class MtgIORestTemplateTest extends Specification implements SampleCardSets {
         return URLEncoder.encode(setNamesAsSingleString, StandardCharsets.UTF_8.toString())
     }
 
-    private String getJSONCardSetArrayFromCardSets(CardSet... sets) {
+    def getJSONCardSetArrayFromCardSets(CardSet... sets) {
         return objectMapper.writeValueAsString(new CardSetsArray(Arrays.asList(sets)))
     }
 

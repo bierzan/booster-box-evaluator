@@ -7,31 +7,30 @@ import spock.lang.Specification
 
 import java.time.LocalDate
 
-class CardProviderTest extends Specification implements CachedCards {
-    private CardRepository repo
-    private CardProvider provider = new CardProvider(repo)
-    private LogCaptor<CardProvider> logCaptor = LogCaptor.forClass(CardProvider.class);
+class CardProviderTest extends Specification implements SampleCards {
+    def repo = new InMemoryCardRepository()
+    def provider = new CardProvider(repo)
+    def logCaptor = LogCaptor.forClass(CardProvider.class);
 
     def "should find cards released after given date"() {
-        given: "Cache with lastWeekCard and todayCard"
-        repo.add(lastWeekCard)
-        repo.add(todayCard)
+        given: "Repo with lastWeekCard and todayCard"
+        repo.replaceContent(List.of(lastWeekCard, todayCard))
         and: "Very old date I want to use to look for cards"
         def date = LocalDate.MIN
 
         when: "I invoke findCardsReleasedAfter with given date"
         def cards = provider.findCardsReleasedAfter(date)
 
-        then: "I get lastWeekCard and todayCard from cache"
+        then: "I get lastWeekCard and todayCard from repo"
         cards.contains(lastWeekCard)
         cards.contains(todayCard)
-        and: "No other cards returned from cache"
+        and: "No other cards returned from repo"
         cards.size() == 2
     }
 
     def "should return empty List as no cards were released after given date"() {
-        given: "Cache with todayCard"
-        repo.add(todayCard)
+        given: "Repo with todayCard"
+        repo.replaceContent(List.of(todayCard))
         and: "Todays date I want to use to look for cards"
         def date = LocalDate.now()
 
@@ -43,8 +42,8 @@ class CardProviderTest extends Specification implements CachedCards {
     }
 
     def "should return empty List when given date is null"() {
-        given: "Cache with todayCard"
-        repo.add(todayCard)
+        given: "Repo with todayCard"
+        repo.replaceContent(List.of(todayCard))
 
         when: "I invoke findCardsReleasedAfter with null as date"
         def cards = provider.findCardsReleasedAfter(null)
@@ -55,15 +54,14 @@ class CardProviderTest extends Specification implements CachedCards {
         logCaptor.getLogs("warn").contains("date can't be null")
     }
 
-    def "should return every element of cache"() {
-        given: "Cache with todayCard"
-        repo.add(todayCard)
-        repo.add(lastWeekCard)
+    def "should return every element from repo"() {
+        given: "Repo with todayCard"
+        repo.replaceContent(List.of(lastWeekCard, todayCard))
 
         when: "I invoke getAll"
         def cards = provider.getAll()
 
         then: "I get list of all cards"
-        cards == List.of(todayCard, lastWeekCard)
+        cards.sort() == List.of(todayCard, lastWeekCard).sort()
     }
 }
