@@ -1,11 +1,12 @@
 package com.brzn.box_eval.box.domain
 
+import com.brzn.box_eval.card.domain.Card
 import com.brzn.box_eval.card.domain.SampleCards
 import com.brzn.box_eval.card.domain.CardFacade
+import com.brzn.box_eval.card.domain.dto.CardDto
 import com.brzn.box_eval.infrastructure.client.RestClient
 import com.brzn.box_eval.mtg_io_client.dto.CardSet
 import com.brzn.box_eval.mtg_io_client.dto.CardSetType
-import com.brzn.box_eval.scryfall_client.dto.Card
 import io.vavr.collection.List
 import io.vavr.collection.Set
 import spock.lang.Specification
@@ -61,9 +62,9 @@ class BoxFacadeTest extends Specification implements SampleBoxes, SampleCards {
         given: "inventory with recently released Box"
         fillRepositoryWithBoxes(todayBox);
         and: "Data from REST clients confirming no new releases"
-        giveRecentlyReleasedCards(new Card[0])
+        giveRecentlyReleasedCards(new CardDto[0])
         and: "Empty list of Cardsets as there were no new releases"
-        giveCardSetsByCards(new Card[0])
+        giveCardSetsByCards(new CardDto[0])
 
         when: "I invoke findNew"
         facade.findNew()
@@ -83,12 +84,12 @@ class BoxFacadeTest extends Specification implements SampleBoxes, SampleCards {
 
     def giveCardSetListByCards(Card ...cards) {
         def cardSets = List.empty();
-        cards.each {cardSets = cardSets.append(cardSetFrom(it))}
+        cards.each {cardSets = cardSets.append(cardSetFrom(it.dto()))}
         return cardSets
     }
 
     def getBoxBySampleCard(Card card) {
-        return boxCreator.from(cardSetFrom(card))
+        return boxCreator.from(cardSetFrom(card.dto))
     }
 
     def giveRecentlyReleasedCards(Card... cards) {
@@ -105,7 +106,7 @@ class BoxFacadeTest extends Specification implements SampleBoxes, SampleCards {
         repository.saveAll(List.of(boxes))
     }
 
-    def cardSetFrom(Card card) {
+    def cardSetFrom(CardDto card) {
         return CardSet.builder()
                 .releaseDate(card.releasedAt)
                 .name(card.setName)

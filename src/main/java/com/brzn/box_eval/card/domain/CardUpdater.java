@@ -1,8 +1,8 @@
 package com.brzn.box_eval.card.domain;
 
+import com.brzn.box_eval.card.domain.dto.CardDto;
 import com.brzn.box_eval.infrastructure.client.Client;
-import com.brzn.box_eval.scryfall_client.dto.Card;
-import com.brzn.box_eval.scryfall_client.dto.CardBulkDataInfo;
+import com.brzn.box_eval.scryfall_client.dto.CardBulkDataInfo; //todo przeniesc do domeny card
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vavr.collection.List;
@@ -43,8 +43,8 @@ class CardUpdater {
     private void updateCardRepoFromFile() {
         try {
             log.info("Updating CardCache with card data from cards.json file");
-            List<Card> cards = mapper.readValue("cards.json", new TypeReference<List<Card>>() {});
-            repo.replaceContent(cards);
+            List<CardDto> cards = mapper.readValue("cards.json", new TypeReference<List<CardDto>>() {});
+            repo.updateAll(cards); //todo czy replace content jest bezpieczny kiedy przyjda bledne lub okrojone dane - update lepszy?
         } catch (IOException e) {
             log.info("Can't parse json file to <List<Card>>. CardCache update failed");
             e.printStackTrace();

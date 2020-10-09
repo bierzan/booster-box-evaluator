@@ -1,8 +1,8 @@
 package com.brzn.box_eval.box.domain;
 
 import com.brzn.box_eval.card.domain.CardFacade;
+import com.brzn.box_eval.card.domain.dto.CardDto;
 import com.brzn.box_eval.infrastructure.client.Client;
-import com.brzn.box_eval.scryfall_client.dto.Card;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ class BoxFinder {
 
     public List<Box> findBoxesReleasedAfter(LocalDate date) {
         Set<String> setNames = cardFacade.findCardsReleasedAfter(date)
-                .map(Card::getSetName)
+                .map(CardDto::getSetName)
                 .toSet();
         return client.findCardSetsByName(setNames)
                 .map(creator::from)

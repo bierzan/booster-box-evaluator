@@ -1,6 +1,6 @@
 package com.brzn.box_eval.card.domain;
 
-import com.brzn.box_eval.scryfall_client.dto.Card;
+import com.brzn.box_eval.card.domain.dto.CardDto;
 import io.vavr.collection.List;
 import io.vavr.control.Option;
 import lombok.AllArgsConstructor;
@@ -13,13 +13,15 @@ import java.time.LocalDate;
 class CardProvider {
     private final CardRepository repo;
 
-    public List<Card> findCardsReleasedAfter(LocalDate date) {
+    public List<CardDto> findCardsReleasedAfter(LocalDate date) {
         return Option.of(date)
                 .map(repo::findCardsReleasedAfter)
                 .getOrElse(() -> {
                     log.warn("date can't be null");
                     return List.empty();
-                });
+                })
+                .map(Card::dto)
+                .collect(List.collector());
     }
 
     public List<Card> getAll() {

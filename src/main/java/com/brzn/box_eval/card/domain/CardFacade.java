@@ -1,6 +1,6 @@
 package com.brzn.box_eval.card.domain;
 
-import com.brzn.box_eval.scryfall_client.dto.Card;
+import com.brzn.box_eval.card.domain.dto.CardDto;
 import io.vavr.collection.List;
 import lombok.AllArgsConstructor;
 
@@ -15,7 +15,7 @@ public class CardFacade {
         updater.update();
     }
 
-    public List<Card> findCardsReleasedAfter(LocalDate date) {
+    public List<CardDto> findCardsReleasedAfter(LocalDate date) {
         return provider.findCardsReleasedAfter(date);
     }
 

@@ -12,5 +12,5 @@ class ScryfallRestTemplate {
 
     public CardBulkDataInfo getCardBulkDataInfo() {
         return restTemplate.getForObject(URL_DEFAULT_BULK_DATA_INFO, CardBulkDataInfo.class);
-    };
+    }
 }

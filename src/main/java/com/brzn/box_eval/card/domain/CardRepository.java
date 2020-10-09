@@ -1,6 +1,6 @@
 package com.brzn.box_eval.card.domain;
 
-import com.brzn.box_eval.scryfall_client.dto.Card;
+import com.brzn.box_eval.card.domain.dto.CardDto;
 import io.vavr.collection.List;
 
 import java.time.LocalDate;
@@ -11,7 +11,7 @@ interface CardRepository {
 
     List<Card> getAll();
 
-    void replaceContent(List<Card> cards);
+    void updateAll(List<CardDto> cards);
 
     boolean isOlderThan(LocalDateTime updatedAt);
 }

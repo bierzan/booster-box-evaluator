@@ -14,7 +14,7 @@ class CardProviderTest extends Specification implements SampleCards {
 
     def "should find cards released after given date"() {
         given: "Repo with lastWeekCard and todayCard"
-        repo.replaceContent(List.of(lastWeekCard, todayCard))
+        repo.updateAll(List.of(lastWeekCard, todayCard))
         and: "Very old date I want to use to look for cards"
         def date = LocalDate.MIN
 
@@ -30,7 +30,7 @@ class CardProviderTest extends Specification implements SampleCards {
 
     def "should return empty List as no cards were released after given date"() {
         given: "Repo with todayCard"
-        repo.replaceContent(List.of(todayCard))
+        repo.updateAll(List.of(todayCard))
         and: "Todays date I want to use to look for cards"
         def date = LocalDate.now()
 
@@ -43,7 +43,7 @@ class CardProviderTest extends Specification implements SampleCards {
 
     def "should return empty List when given date is null"() {
         given: "Repo with todayCard"
-        repo.replaceContent(List.of(todayCard))
+        repo.updateAll(List.of(todayCard))
 
         when: "I invoke findCardsReleasedAfter with null as date"
         def cards = provider.findCardsReleasedAfter(null)
@@ -56,7 +56,7 @@ class CardProviderTest extends Specification implements SampleCards {
 
     def "should return every element from repo"() {
         given: "Repo with todayCard"
-        repo.replaceContent(List.of(lastWeekCard, todayCard))
+        repo.updateAll(List.of(lastWeekCard, todayCard))
 
         when: "I invoke getAll"
         def cards = provider.getAll()

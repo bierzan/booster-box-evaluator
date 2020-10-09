@@ -1,6 +1,5 @@
 package com.brzn.box_eval.card.domain
 
-import com.brzn.box_eval.scryfall_client.dto.Card
 import groovy.transform.CompileStatic
 
 import java.time.LocalDate
