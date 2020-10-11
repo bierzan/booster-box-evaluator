@@ -1,7 +1,6 @@
 package com.brzn.box_eval.box.domain;
 
-import com.brzn.box_eval.card.domain.CardFacade;
-import com.brzn.box_eval.infrastructure.client.Client;
+import com.brzn.box_eval.box.interfaces.CardSetPropertiesProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 class BoxConfiguration {
 
-    private final CardFacade cardFacade;
-    private final Client client;
+    private final CardSetPropertiesProvider cardSetPropertiesProvider;
 
     BoxFacade boxFacade() {
         return boxFacade(new InMemoryBoxRepository());
@@ -21,7 +19,7 @@ class BoxConfiguration {
     BoxFacade boxFacade(BoxRepository repository) {
         BoosterSchemaCreator boosterSchemaCreator = new BoosterSchemaCreator();
         BoxCreator creator = new BoxCreator(boosterSchemaCreator);
-        BoxFinder finder = new BoxFinder(cardFacade, client , creator);
+        BoxFinder finder = new BoxFinder(creator, cardSetPropertiesProvider);
         BoxCommand command = new BoxCommand(finder, repository);
         return new BoxFacade(command, repository);
     }

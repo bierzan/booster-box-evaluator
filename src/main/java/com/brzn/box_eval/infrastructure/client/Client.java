@@ -7,7 +7,7 @@ import io.vavr.collection.Set;
 
 public interface Client {
 
-    List<CardSet> findCardSetsByName(Set<String> setNames);
+    List<CardSet> findCardSetsByName(Set<String> setNames); //todo zamiast cardsetu hashmape?
 
     List<CardSet> findAllCardSets();
 

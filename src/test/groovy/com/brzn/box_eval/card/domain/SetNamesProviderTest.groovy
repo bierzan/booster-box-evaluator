@@ -7,7 +7,7 @@ import spock.lang.Specification
 
 import java.time.LocalDate
 
-class CardProviderTest extends Specification implements SampleCards {
+class SetNamesProviderTest extends Specification implements SampleCards {
     def repo = new InMemoryCardRepository()
     def provider = new CardProvider(repo)
     def logCaptor = LogCaptor.forClass(CardProvider.class);
