@@ -2,11 +2,9 @@ package com.brzn.box_eval.box.domain
 
 import com.brzn.box_eval.box.dto.BoxCardSetType
 import com.brzn.box_eval.box.vo.BoosterSchema
-import com.brzn.box_eval.card.domain.SampleCards
-import com.brzn.box_eval.mtgIOclient.domain.SampleCardSets
 import spock.lang.Specification
 
-class BoxCreatorTest extends Specification implements SampleCardSets, SampleCards {
+class BoxCreatorTest extends Specification implements SampleCardSetProperties {
 
     def boosterSchemaCreator = Mock(BoosterSchemaCreator)
     def creator = new BoxCreator(boosterSchemaCreator);
@@ -15,17 +13,17 @@ class BoxCreatorTest extends Specification implements SampleCardSets, SampleCard
         given:
         def boosterSchema = BoosterSchema.of(null)
         def expectedBox = Box.builder()
-                .cardSetName(sampleCommonSet.name)
-                .cardSetCode(sampleCommonSet.code)
-                .boxCardSetType(BoxCardSetType.getMatchingType(sampleCommonSet.type.toString()))
-                .releaseDate(sampleCommonSet.releaseDate)
+                .cardSetName(commonSet.name)
+                .cardSetCode(commonSet.code)
+                .boxCardSetType(BoxCardSetType.getMatchingType(commonSet.type.toString()))
+                .releaseDate(commonSet.releaseDate)
                 .boosterSchema(boosterSchema)
                 .boosterQuantity(36)
                 .build();
 
         boosterSchemaCreator.from(null) >> boosterSchema
         when:
-        def resultBox = creator.from(sampleCommonSet)
+        def resultBox = creator.from(commonSet)
         then:
         resultBox == expectedBox
     }

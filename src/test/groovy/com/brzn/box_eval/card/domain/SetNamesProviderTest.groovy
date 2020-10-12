@@ -14,7 +14,7 @@ class SetNamesProviderTest extends Specification implements SampleCards {
 
     def "should find cards released after given date"() {
         given: "Repo with lastWeekCard and todayCard"
-        repo.updateAll(List.of(lastWeekCard, todayCard))
+        putCardsInRepo(lastWeekCard, todayCard)
         and: "Very old date I want to use to look for cards"
         def date = LocalDate.MIN
 
@@ -30,7 +30,7 @@ class SetNamesProviderTest extends Specification implements SampleCards {
 
     def "should return empty List as no cards were released after given date"() {
         given: "Repo with todayCard"
-        repo.updateAll(List.of(todayCard))
+        putCardsInRepo(todayCard)
         and: "Todays date I want to use to look for cards"
         def date = LocalDate.now()
 
@@ -43,7 +43,7 @@ class SetNamesProviderTest extends Specification implements SampleCards {
 
     def "should return empty List when given date is null"() {
         given: "Repo with todayCard"
-        repo.updateAll(List.of(todayCard))
+        putCardsInRepo(todayCard)
 
         when: "I invoke findCardsReleasedAfter with null as date"
         def cards = provider.findCardsReleasedAfter(null)
@@ -56,12 +56,20 @@ class SetNamesProviderTest extends Specification implements SampleCards {
 
     def "should return every element from repo"() {
         given: "Repo with todayCard"
-        repo.updateAll(List.of(lastWeekCard, todayCard))
+        putCardsInRepo(todayCard, lastWeekCard)
 
         when: "I invoke getAll"
         def cards = provider.getAll()
 
         then: "I get list of all cards"
         cards.sort() == List.of(todayCard, lastWeekCard).sort()
+    }
+
+    def putCardsInRepo(Card... cards) {
+        def cardDtos = Arrays.asList(cards).stream()
+                .map({ card -> card.dto() })
+                .collect(List.collector())
+                .getOrElse({ -> List.empty() })
+        repo.updateAll(List.of(cardDtos))
     }
 }
