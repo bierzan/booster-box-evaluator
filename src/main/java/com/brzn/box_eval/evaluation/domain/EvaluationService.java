@@ -21,18 +21,4 @@ class EvaluationService {
         this.calculator = calculator;
     }
 
-    EvaluationDto getLast(String cardSetName) {
-        BoxDto boxDto = boxFacade.get(cardSetName);
-        Optional<Evaluation> evaluationOpt = repository.findLastBySetId(boxDto.getId());
-        return evaluationOpt.orElse(Evaluation.builder().build()).dto();
-    }
-
-    EvaluationDto calculate(String cardSetName) {
-        BoxDto boxDto = boxFacade.get(cardSetName);
-        BigDecimal avgValue = calculator.getAvgValue(boxDto);
-        return EvaluationDto.builder()
-                .avgValue(avgValue)
-                .date(LocalDate.now())
-                .build();
-    }
 }

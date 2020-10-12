@@ -43,6 +43,7 @@ class InMemoryCardRepository implements CardRepository {
     private long save(CardDto cardDto) {
         Card card = Card.builder()
                 .id(getNewId())
+                .uuid(cardDto.getUuid())
                 .name(cardDto.getName())
                 .setName(cardDto.getSetName())
                 .setCode(cardDto.getSetCode())

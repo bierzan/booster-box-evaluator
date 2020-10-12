@@ -78,7 +78,7 @@ class BoxFacadeTest extends Specification implements SampleBoxes, SampleCardSetP
     def createBoxFacade(BoxRepository repo) {
         BoxFinder finder = new BoxFinder(boxCreator, cardSetPropertiesProvider);
         BoxCommand command = new BoxCommand(finder, repo)
-        return new BoxFacade(command, repo)
+        return new BoxFacade(command)
     }
 
     def fillRepositoryWithBoxes(Box... boxes) {

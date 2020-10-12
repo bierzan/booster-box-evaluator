@@ -34,8 +34,8 @@ class BoosterSchemaCreator {
 
     private HashSet<CardRarity> getRaritiesForSlot(String[] slot) {
         return Arrays.stream(slot)
-                .filter(Objects::nonNull)
                 .map(this::findMatchingRarity)
+                .filter(Objects::nonNull)
                 .collect(HashSet.collector());
     }
 
@@ -45,6 +45,7 @@ class BoosterSchemaCreator {
                 return rarity;
             }
         }
+        log.info(String.format("Couldn't find matching rarity for name [%s]", name));
         return null;
     }
 }

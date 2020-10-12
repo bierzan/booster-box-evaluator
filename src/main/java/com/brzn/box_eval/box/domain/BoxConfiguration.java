@@ -21,7 +21,7 @@ class BoxConfiguration {
         BoxCreator creator = new BoxCreator(boosterSchemaCreator);
         BoxFinder finder = new BoxFinder(creator, cardSetPropertiesProvider);
         BoxCommand command = new BoxCommand(finder, repository);
-        return new BoxFacade(command, repository);
+        return new BoxFacade(command);
     }
 }
 

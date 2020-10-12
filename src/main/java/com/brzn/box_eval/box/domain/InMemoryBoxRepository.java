@@ -21,11 +21,6 @@ class InMemoryBoxRepository implements BoxRepository {
     }
 
     @Override
-    public Option<Box> findBySetName(String cardSetName) {
-        return map.get(cardSetName);
-    }
-
-    @Override
     public Option<LocalDate> findLastReleaseDate() {
         return map.values()
                 .map(Box::dto)

@@ -1,20 +1,20 @@
 package com.brzn.box_eval.box.domain
 
-import com.brzn.box_eval.mtg_io_client.dto.CardSet
-import com.brzn.box_eval.mtg_io_client.dto.CardSetType
+import com.brzn.box_eval.box.dto.CardSetProperties
+import com.brzn.box_eval.box.dto.CardSetType
 import spock.lang.Specification
 
 class BoxCreatorBoosterQuantityTest extends Specification {
+    public static final String STANDARD_BLOCK = "standardBlock"
+    public static final String CONSPIRACY = "Conspiracy"
     def boosterSchemaCreator = Mock(BoosterSchemaCreator)
     def creator = new BoxCreator(boosterSchemaCreator)
     def box
-    def cardSet
+    def cardSetProperties
 
     def "should create Box with boosterQuantity of 24 for Conspiracy block"() {
         given:
-        cardSet = CardSet.builder()
-                .block("Conspiracy")
-                .build()
+        giveCardSetPropertiesWithBlock(CONSPIRACY)
         when:
         createsBoosterFromCardSet()
         then:
@@ -23,9 +23,7 @@ class BoxCreatorBoosterQuantityTest extends Specification {
 
     def "should create Box with boosterQuantity of 36 for standardBlock"() {
         given:
-        cardSet = CardSet.builder()
-                .block("standardBlock")
-                .build()
+        giveCardSetPropertiesWithBlock(STANDARD_BLOCK)
         when:
         createsBoosterFromCardSet()
         then:
@@ -34,10 +32,7 @@ class BoxCreatorBoosterQuantityTest extends Specification {
 
     def "should create Box with boosterQuantity of 24 for standardBlock and Masters set"() {
         given:
-        cardSet = CardSet.builder()
-                .block("standardBlock")
-                .type(CardSetType.MASTERS)
-                .build()
+        giveCardSetPropertiesWithBlockAndType(STANDARD_BLOCK, CardSetType.MASTERS)
         when:
         createsBoosterFromCardSet()
         then:
@@ -47,18 +42,28 @@ class BoxCreatorBoosterQuantityTest extends Specification {
 
     def "should create Box with boosterQuantity of 36 for standardBlock and any other set"() {
         given:
-        cardSet = CardSet.builder()
-                .block("standardBlock")
-                .type(CardSetType.CORE)
-                .build()
+        giveCardSetPropertiesWithBlockAndType(STANDARD_BLOCK, CardSetType.CORE)
         when:
         createsBoosterFromCardSet()
         then:
         getBoosterQuantity() == 36
     }
 
+    def giveCardSetPropertiesWithBlock(String block) {
+        cardSetProperties = CardSetProperties.builder()
+                .block(block)
+                .build()
+    }
+
+    def giveCardSetPropertiesWithBlockAndType(String block, CardSetType type) {
+        cardSetProperties = CardSetProperties.builder()
+                .block(block)
+                .type(type)
+                .build()
+    }
+
     def createsBoosterFromCardSet() {
-        box = creator.from(cardSet as CardSet)
+        box = creator.from(cardSetProperties as CardSetProperties)
     }
 
     private int getBoosterQuantity() {

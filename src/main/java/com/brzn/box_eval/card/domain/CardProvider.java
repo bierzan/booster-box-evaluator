@@ -24,7 +24,9 @@ class CardProvider {
                 .collect(List.collector());
     }
 
-    public List<Card> getAll() {
-        return repo.getAll();
+    public List<CardDto> getAll() {
+        return repo.getAll()
+                .map(Card::dto)
+                .collect(List.collector());
     }
 }

@@ -18,9 +18,9 @@ import java.net.URL;
 @AllArgsConstructor
 class CardUpdater {
 
-    private final Client client;
+    private final Client client; //todo provider
     private final CardRepository repo;
-    private final ObjectMapper mapper;
+    private final ObjectMapper mapper; //todo card mapper
 
     public void update() {
         CardBulkDataInfo bulkData = client.getCardBulkDataInfo();

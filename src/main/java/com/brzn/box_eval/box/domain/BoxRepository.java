@@ -10,8 +10,6 @@ import java.time.LocalDate;
 interface BoxRepository extends Repository<Box, Long> {
     Box save(Box box);
 
-    Option<Box> findBySetName(String cardSetName);
-
     Option<LocalDate> findLastReleaseDate();
 
     List<Long> saveAll(List<Box> boxes);

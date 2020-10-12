@@ -19,7 +19,7 @@ public class CardFacade {
         return provider.findCardsReleasedAfter(date);
     }
 
-    public List<Card> getAllCards() {
+    public List<CardDto> getAllCards() {
         return provider.getAll();
     }
 
