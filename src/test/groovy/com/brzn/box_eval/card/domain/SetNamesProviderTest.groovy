@@ -70,4 +70,12 @@ class SetNamesProviderTest extends Specification implements SampleCards {
         cards.each {dtos = dtos.append(it.dto())}
         repo.updateAll(dtos)
     }
+
+    def putCardsInRepo(Card... cards) {
+        def cardDtos = Arrays.asList(cards).stream()
+                .map({ card -> card.dto() })
+                .collect(List.collector())
+                .getOrElse({ -> List.empty() })
+        repo.updateAll(List.of(cardDtos))
+    }
 }
