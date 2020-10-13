@@ -1,6 +1,6 @@
 package com.brzn.box_eval.card.domain;
 
-import com.brzn.box_eval.card.domain.dto.CardDto;
+import com.brzn.box_eval.card.dto.CardDto;
 import io.vavr.collection.List;
 import lombok.AllArgsConstructor;
 
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CardFacade {
     private final CardUpdater updater;
-    private final CardProvider provider;
+    private final CardQuery provider;
 
     public void updateCardRepository() {
         updater.update();

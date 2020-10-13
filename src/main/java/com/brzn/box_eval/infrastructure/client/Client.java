@@ -1,9 +1,11 @@
 package com.brzn.box_eval.infrastructure.client;
 
 import com.brzn.box_eval.mtg_io_client.dto.CardSet;
-import com.brzn.box_eval.scryfall_client.dto.CardBulkDataInfo;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
+
+import java.net.URL;
+import java.time.LocalDate;
 
 public interface Client {
 
@@ -11,6 +13,5 @@ public interface Client {
 
     List<CardSet> findAllCardSets();
 
-    CardBulkDataInfo getCardBulkDataInfo();
-
+    URL getUrlForCardDateUpdatedAfter(LocalDate lastUpdate);
 }

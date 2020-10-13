@@ -1,9 +1,9 @@
 package com.brzn.box_eval.adapter.cardsetproperties;
 
 import com.brzn.box_eval.box.dto.CardSetProperties;
-import com.brzn.box_eval.box.interfaces.CardSetPropertiesProvider;
+import com.brzn.box_eval.box.port.CardSetPropertiesProvider;
 import com.brzn.box_eval.card.domain.CardFacade;
-import com.brzn.box_eval.card.domain.dto.CardDto;
+import com.brzn.box_eval.card.dto.CardDto;
 import com.brzn.box_eval.infrastructure.client.Client;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;

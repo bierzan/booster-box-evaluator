@@ -1,10 +1,9 @@
 package com.brzn.box_eval.mtg_io_client
 
-import com.brzn.box_eval.card.domain.CardProvider
+
 import com.brzn.box_eval.mtgIOclient.domain.SampleCardSets
 import com.brzn.box_eval.mtg_io_client.dto.CardSet
 import com.brzn.box_eval.mtg_io_client.dto.CardSetsArray
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.collect.Lists
 import io.vavr.collection.HashSet
 import nl.altindag.log.LogCaptor

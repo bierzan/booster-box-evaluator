@@ -1,17 +1,14 @@
 package com.brzn.box_eval.card.domain;
 
-import com.brzn.box_eval.card.domain.dto.CardDto;
+import com.brzn.box_eval.card.dto.CardDto;
 import io.vavr.collection.List;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 class InMemoryCardRepository implements CardRepository {
-    private LocalDateTime updateDate;
     private List<Card> cardInventory;
 
     public InMemoryCardRepository() {
-        updateDate = LocalDateTime.MIN;
         cardInventory = List.empty();
     }
 
@@ -29,8 +26,17 @@ class InMemoryCardRepository implements CardRepository {
 
     @Override
     public void updateAll(List<CardDto> cards){
-        cards.forEach(this::update);
-        updateDate = LocalDateTime.now();
+        if (cards!=null && cards.nonEmpty()) {
+            cards.forEach(this::update);
+        }
+    }
+
+    @Override
+    public LocalDate findLastCardUpdateDate() {
+        return cardInventory
+                .map(Card::getLastUpdate)
+                .max()
+                .getOrElse(LocalDate.MIN);
     }
 
     private long update(CardDto cardDto) {
@@ -49,6 +55,7 @@ class InMemoryCardRepository implements CardRepository {
                 .setCode(cardDto.getSetCode())
                 .releasedAt(cardDto.getReleasedAt())
                 .price(cardDto.getPrice())
+                .lastUpdate(LocalDate.now())
                 .build();
         cardInventory = cardInventory.append(card);
         return card.getId();
@@ -60,10 +67,5 @@ class InMemoryCardRepository implements CardRepository {
                 .max()
                 .map(maxId -> maxId+1L)
                 .getOrElse(1L);
-    }
-
-    @Override
-    public boolean isOlderThan(LocalDateTime updatedAt) { //todo test
-        return updateDate.isBefore(updatedAt);
     }
 }

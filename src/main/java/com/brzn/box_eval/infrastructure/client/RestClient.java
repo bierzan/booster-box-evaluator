@@ -3,13 +3,12 @@ package com.brzn.box_eval.infrastructure.client;
 import com.brzn.box_eval.mtg_io_client.MtgIO;
 import com.brzn.box_eval.mtg_io_client.dto.CardSet;
 import com.brzn.box_eval.scryfall_client.Scryfall;
-import com.brzn.box_eval.scryfall_client.dto.Card;
-import com.brzn.box_eval.scryfall_client.dto.CardBulkDataInfo;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 import lombok.AllArgsConstructor;
 
-import java.net.URI;
+import java.net.URL;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 public class RestClient implements Client {
@@ -28,7 +27,7 @@ public class RestClient implements Client {
     }
 
     @Override
-    public CardBulkDataInfo getCardBulkDataInfo() {
-        return scryfall.getCardBulkDataInfo();
+    public URL getUrlForCardDateUpdatedAfter(LocalDate lastUpdate) {
+        return scryfall.getUrlForCardDateUpdatedAfter(lastUpdate);
     }
 }

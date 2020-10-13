@@ -1,6 +1,6 @@
 package com.brzn.box_eval.box.domain;
 
-import com.brzn.box_eval.box.interfaces.CardSetPropertiesProvider;
+import com.brzn.box_eval.box.port.CardSetPropertiesProvider;
 import io.vavr.collection.List;
 import lombok.AllArgsConstructor;
 

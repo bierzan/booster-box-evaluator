@@ -1,6 +1,6 @@
 package com.brzn.box_eval.box.domain;
 
-import com.brzn.box_eval.box.interfaces.CardSetPropertiesProvider;
+import com.brzn.box_eval.box.port.CardSetPropertiesProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

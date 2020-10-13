@@ -1,4 +1,4 @@
-package com.brzn.box_eval.box.interfaces;
+package com.brzn.box_eval.box.port;
 
 import com.brzn.box_eval.box.dto.CardSetProperties;
 import io.vavr.collection.List;

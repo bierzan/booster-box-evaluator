@@ -1,6 +1,6 @@
 package com.brzn.box_eval.card.domain
 
-import com.brzn.box_eval.card.domain.dto.CardDto
+import com.brzn.box_eval.card.dto.CardDto
 import io.vavr.collection.List
 import nl.altindag.log.LogCaptor
 import spock.lang.Specification
@@ -9,8 +9,8 @@ import java.time.LocalDate
 
 class SetNamesProviderTest extends Specification implements SampleCards {
     def repo = new InMemoryCardRepository()
-    def provider = new CardProvider(repo)
-    def logCaptor = LogCaptor.forClass(CardProvider.class);
+    def provider = new CardQuery(repo)
+    def logCaptor = LogCaptor.forClass(CardQuery.class);
 
     def "should find cards released after given date"() {
         given: "Repo with lastWeekCard and todayCard"

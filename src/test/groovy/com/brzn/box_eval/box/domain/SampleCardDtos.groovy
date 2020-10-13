@@ -1,7 +1,6 @@
 package com.brzn.box_eval.box.domain
 
-
-import com.brzn.box_eval.card.domain.dto.CardDto
+import com.brzn.box_eval.card.dto.CardDto
 import groovy.transform.CompileStatic
 
 import java.time.LocalDate

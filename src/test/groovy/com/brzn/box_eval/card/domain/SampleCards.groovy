@@ -7,7 +7,7 @@ import java.time.LocalDate
 @CompileStatic
 trait SampleCards {
     Card todayCard = Card.builder()
-            .uuid(1L)
+            .uuid("todayCardUUID")
             .name("todayCard")
             .releasedAt(LocalDate.now())
             .setName("todaySet")
@@ -15,10 +15,11 @@ trait SampleCards {
             .build();
 
     Card lastWeekCard = Card.builder()
-            .uuid(2L)
+            .uuid("lastWeekCardUUID")
             .name("lastWeekCard")
             .releasedAt(LocalDate.now().minusWeeks(1))
             .setName("lastWeekSet")
             .setCode("lws")
+            .lastUpdate(LocalDate.now().minusWeeks(1))
             .build();
 }
