@@ -10,7 +10,7 @@ import io.vavr.collection.Set;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
-
+//todo testy providerow
 @AllArgsConstructor
 public class DefaultCardSetPropertiesProvider implements CardSetPropertiesProvider {
     private final CardFacade cardFacade;

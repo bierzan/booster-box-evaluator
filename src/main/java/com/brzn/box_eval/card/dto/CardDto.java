@@ -23,6 +23,7 @@ public class CardDto {
     private String uuid;
     private String name;
     private LocalDate releasedAt;
+    private LocalDate lastUpdate;
     private String setName;
     private String setCode;
     private BigDecimal price;

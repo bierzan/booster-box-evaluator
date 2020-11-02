@@ -24,7 +24,9 @@ class CardUpdater {
 
     private Option<File> getRecentCardJsonFile() {
         return Option.of(repo.findLastCardUpdateDate())
-                .map(cardJsonFileProvider::getCardsJsonFileReleasedAfter);
+                .flatMap(lastCardUpdateDate -> Option.of(
+                        cardJsonFileProvider.getCardsJsonFileReleasedAfter(lastCardUpdateDate)
+                ));
     }
 
     private void updateCardRepoFromJsonFile(File file) {

@@ -1,6 +1,6 @@
 package com.brzn.box_eval.card.domain
 
-import com.brzn.box_eval.card.dto.CardDto
+
 import com.brzn.box_eval.card.port.CardJsonFileProvider
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.io.FileUtils

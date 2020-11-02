@@ -18,8 +18,8 @@ trait SampleCards {
             .uuid("lastWeekCardUUID")
             .name("lastWeekCard")
             .releasedAt(LocalDate.now().minusWeeks(1))
+            .lastUpdate(LocalDate.now().minusWeeks(1))
             .setName("lastWeekSet")
             .setCode("lws")
-            .lastUpdate(LocalDate.now().minusWeeks(1))
             .build();
 }

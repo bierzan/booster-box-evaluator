@@ -18,7 +18,7 @@ class CardMapper {
     public List<CardDto> fromJsonListFile(File file) {
         try {
             return List.of(mapper.readValue(file, CardDto[].class));
-        } catch (IOException e) {
+        } catch (IOException e) { //todo unit test
             log.info("Can't parse json file to <List<Card>>. CardCache update failed");
             e.printStackTrace();
             return List.empty();

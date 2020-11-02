@@ -13,20 +13,20 @@ class InMemoryCardRepository implements CardRepository {
     }
 
     @Override
-    public List<Card> findCardsReleasedAfter(LocalDate date){
+    public List<Card> findCardsReleasedAfter(LocalDate date) {
         return cardInventory
                 .filter(card -> card.isReleasedAfter(date))
                 .toList();
     }
 
     @Override
-    public List<Card> getAll(){
+    public List<Card> getAll() {
         return cardInventory;
     }
 
     @Override
-    public void updateAll(List<CardDto> cards){
-        if (cards!=null && cards.nonEmpty()) {
+    public void updateAll(List<CardDto> cards) {
+        if (cards != null && cards.nonEmpty()) {
             cards.forEach(this::update);
         }
     }
@@ -43,10 +43,13 @@ class InMemoryCardRepository implements CardRepository {
         return cardInventory
                 .find(cardFromInventory -> cardFromInventory.refersTo(cardDto))
                 .map(cardFromInventory -> cardFromInventory.updateData(cardDto)) //todo weryfikacja czy zaktualizuje
-                .getOrElse(()->save(cardDto));
+                .getOrElse(() -> {
+                    cardDto.setLastUpdate(LocalDate.now());
+                    return save(cardDto);
+                });
     }
 
-    private long save(CardDto cardDto) {
+    public long save(CardDto cardDto) {
         Card card = Card.builder()
                 .id(getNewId())
                 .uuid(cardDto.getUuid())
@@ -55,7 +58,7 @@ class InMemoryCardRepository implements CardRepository {
                 .setCode(cardDto.getSetCode())
                 .releasedAt(cardDto.getReleasedAt())
                 .price(cardDto.getPrice())
-                .lastUpdate(LocalDate.now())
+                .lastUpdate(cardDto.getLastUpdate())
                 .build();
         cardInventory = cardInventory.append(card);
         return card.getId();
@@ -65,7 +68,7 @@ class InMemoryCardRepository implements CardRepository {
         return cardInventory
                 .map(Card::getId)
                 .max()
-                .map(maxId -> maxId+1L)
+                .map(maxId -> maxId + 1L)
                 .getOrElse(1L);
     }
 }

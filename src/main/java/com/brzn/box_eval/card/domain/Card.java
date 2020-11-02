@@ -36,7 +36,7 @@ class Card {
     }
 
     public boolean refersTo(CardDto dto) {
-        return uuid ==  dto.getUuid();
+        return uuid.equals(dto.getUuid());
     }
 
     public CardDto dto() {
@@ -44,6 +44,7 @@ class Card {
                 .uuid(uuid)
                 .name(name)
                 .releasedAt(releasedAt)
+                .lastUpdate(lastUpdate)
                 .setName(setName)
                 .setCode(setCode)
                 .price(price)
