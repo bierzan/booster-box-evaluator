@@ -11,6 +11,7 @@ class SetNamesProviderTest extends Specification implements SampleCards {
     def repo = new InMemoryCardRepository()
     def provider = new CardQuery(repo)
     def logCaptor = LogCaptor.forClass(CardQuery.class);
+    def cards
 
     def "should find cards released after given date"() {
         given: "Repo with lastWeekCard and todayCard"
@@ -19,11 +20,11 @@ class SetNamesProviderTest extends Specification implements SampleCards {
         def date = LocalDate.MIN
 
         when: "I invoke findCardsReleasedAfter with given date"
-        def cards = provider.findCardsReleasedAfter(date)
+        cards = provider.findCardsReleasedAfter(date)
 
         then: "I get lastWeekCard and todayCard from repo"
-        cards.contains(lastWeekCard.dto())
-        cards.contains(todayCard.dto())
+        assertThatCardsListContainsCard(lastWeekCard)
+        assertThatCardsListContainsCard(todayCard)
         and: "No other cards returned from repo"
         cards.size() == 2
     }
@@ -46,7 +47,7 @@ class SetNamesProviderTest extends Specification implements SampleCards {
         putCardsInRepo(todayCard)
 
         when: "I invoke findCardsReleasedAfter with null as date"
-        def cards = provider.findCardsReleasedAfter(null)
+        cards = provider.findCardsReleasedAfter(null)
 
         then: "I get empty list"
         cards.isEmpty()
@@ -59,15 +60,28 @@ class SetNamesProviderTest extends Specification implements SampleCards {
         putCardsInRepo(todayCard, lastWeekCard)
 
         when: "I invoke getAll"
-        def cards = provider.getAll()
+        cards = provider.getAll()
 
         then: "I get list of all cards"
-        cards.sort() == List.of(todayCard.dto(), lastWeekCard.dto()).sort()
+        assertThatCardsListContainsOnlyGivenCards(todayCard, lastWeekCard)
     }
 
     def putCardsInRepo(Card... cards) {
         List<CardDto> dtos = List.empty()
-        cards.each {dtos = dtos.append(it.dto())}
+        cards.each { dtos = dtos.append(it.dto()) }
         repo.updateAll(dtos)
+    }
+
+    def assertThatCardsListContainsCard(Card searchedCard) {
+        return cards.map({ card -> card.uuid })
+                .contains(searchedCard.dto().uuid)
+    }
+
+    def assertThatCardsListContainsOnlyGivenCards(Card... searchedCards) {
+        def searchedUUIDs = Arrays.stream(searchedCards)
+                .map({ card -> card.dto().getUuid() })
+                .collect(List.collector())
+
+        return cards.map({ card -> card.uuid }).sort() == searchedUUIDs.sort()
     }
 }
