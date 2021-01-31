@@ -11,7 +11,7 @@ public class CardFacade {
     private final CardUpdater updater;
     private final CardQuery provider;
 
-    public void updateCardRepository() {
+    public void updateCardRepository() { //todo ustawic scheduler
         updater.update();
     }
 

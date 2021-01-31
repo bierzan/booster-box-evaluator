@@ -18,6 +18,17 @@ class CardFacadeTest extends Specification implements SampleCards {
     def file = FileUtils.getFile("src/test/resources/cardBulkData.json")
     def fromJsonFileCards = CardsFromResources.readJson2CardDtos(file)
 
+    def "fill empty repo with recent cards"() {
+        given: "Empty card repository"
+        assert(repo.getAll().size() == 0)
+        and: "JsonFile with recent cards data"
+        fileProvider.getCardsJsonFileReleasedAfter(_ as LocalDate) >> file
+        when: "I invoke update"
+        facade.updateCardRepository()
+        then: "I see repo with new cards"
+        repo.getAll().map({ card -> card.dto().uuid }).sort() == fromJsonFileCards.map({ card -> card.uuid }).sort()
+    }
+
     def "update repo with recent cards"() {
         given: "Repo with lastWeekCard"
         repo.save(lastWeekCard.dto())
@@ -43,8 +54,6 @@ class CardFacadeTest extends Specification implements SampleCards {
         then: "I see that cards update date hasn't changed"
         repo.getAll().each { it.getLastUpdate().isEqual(lastWeekCard.lastUpdate) }
     }
-
-    //todo osobny test na to kiedy file nie pobierze pliku
 
     def repoContainsOnlyCards(Card... cards){
         def cardUuidsFromRepo = repo.getAll()

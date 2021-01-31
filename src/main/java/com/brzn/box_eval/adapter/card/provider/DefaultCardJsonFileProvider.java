@@ -3,7 +3,7 @@ package com.brzn.box_eval.adapter.card.provider;
 import com.brzn.box_eval.card.port.CardJsonFileProvider;
 import com.brzn.box_eval.infrastructure.client.Client;
 import io.vavr.control.Option;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 
@@ -13,7 +13,7 @@ import java.net.URL;
 import java.time.LocalDate;
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class DefaultCardJsonFileProvider implements CardJsonFileProvider {
     public static final String FILE_PATH = "cards.json";
     private final Client client;

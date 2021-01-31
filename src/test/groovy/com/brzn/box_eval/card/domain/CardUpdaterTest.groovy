@@ -13,29 +13,44 @@ class CardUpdaterTest extends Specification {
     def mapper = new CardMapper(new ObjectMapper())
     def repository = Mock(CardRepository)
     def updater = new CardUpdater(repository, mapper, fileProvider)
+    def cardBulkDataFile = FileUtils.getFile("src/test/resources/cardBulkData.json")
+    def cardsFromJsonFile = mapper.fromJsonListFile(cardBulkDataFile)
 
-    def test() {
+    def "should call update on card repository with recent cards"() {
         given:
-        def file = FileUtils.getFile("src/test/resources/cardBulkData.json")
+        stubFindingLastCardUpdateDate(LocalDate.now())
+        stubGettingJsonFIle(cardBulkDataFile)
+        when:
+        updater.update()
+        then:
+        1 * repository.updateAll(cardsFromJsonFile)
+    }
+
+    def "should call update on card repository with recent cards without last update date info"() {
+        given:
+        stubFindingLastCardUpdateDate(null);
+        stubGettingJsonFIle(cardBulkDataFile)
+        when:
+        updater.update()
+        then:
+        1 * repository.updateAll(cardsFromJsonFile)
+    }
+
+    def "should not call update on card repository when no file is provided"() {
+        given:
+        stubFindingLastCardUpdateDate(LocalDate.now())
+        stubGettingJsonFIle(null)
+        when:
+        updater.update()
+        then:
+        0 * repository.updateAll(_)
+    }
+
+    def stubGettingJsonFIle(File file) {
         fileProvider.getCardsJsonFileReleasedAfter(_ as LocalDate) >> file
-        def cards = mapper.fromJsonListFile(file)
-        when:
-        updater.update()
-        then:
-        1 * repository.updateAll(cards)
     }
 
-    def "repository shouldn't be updated if provided card list is null"() {
-        given:
-        def cards = null
-        mapper.fromJsonListFile(_ as File) >> cards
-        when:
-        updater.update()
-        then:
-        0 * repository.updateAll(cards)
-    }
-
-    def "repository shouldn't be updated if card file is not recent one"() {
-
+    def stubFindingLastCardUpdateDate(LocalDate date) {
+        repository.findLastCardUpdateDate() >> date
     }
 }

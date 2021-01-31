@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @Slf4j
 @AllArgsConstructor
-class CardMapper {
+class CardMapper { //todo test na mapowanie kart
 
     private final ObjectMapper mapper;
 
@@ -19,7 +19,7 @@ class CardMapper {
         try {
             return List.of(mapper.readValue(file, CardDto[].class));
         } catch (IOException e) { //todo unit test
-            log.info("Can't parse json file to <List<Card>>. CardCache update failed");
+            log.info("Can't parse json file to <List<CardDto>>. CardCache update failed");
             e.printStackTrace();
             return List.empty();
         }

@@ -5,6 +5,7 @@ import com.brzn.box_eval.box.vo.BoosterSchema;
 import com.brzn.box_eval.box.vo.CardSlot;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
+import io.vavr.collection.Set;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -32,7 +33,7 @@ class BoosterSchemaCreator {
         return BoosterSchema.of(slots);
     }
 
-    private HashSet<CardRarity> getRaritiesForSlot(String[] slot) {
+    private Set<CardRarity> getRaritiesForSlot(String[] slot) {
         return Arrays.stream(slot)
                 .map(this::findMatchingRarity)
                 .filter(Objects::nonNull)

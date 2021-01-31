@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.time.LocalDate;
 
 @Slf4j
 @AllArgsConstructor
@@ -24,9 +25,12 @@ class CardUpdater {
 
     private Option<File> getRecentCardJsonFile() {
         return Option.of(repo.findLastCardUpdateDate())
-                .flatMap(lastCardUpdateDate -> Option.of(
-                        cardJsonFileProvider.getCardsJsonFileReleasedAfter(lastCardUpdateDate)
-                ));
+                .flatMap(this::getCardsJsonFileReleasedAfter)
+                .orElse(() -> getCardsJsonFileReleasedAfter(LocalDate.MIN));
+    }
+
+    private Option<File> getCardsJsonFileReleasedAfter(LocalDate lastCardUpdateDate) {
+        return Option.of(cardJsonFileProvider.getCardsJsonFileReleasedAfter(lastCardUpdateDate));
     }
 
     private void updateCardRepoFromJsonFile(File file) {
