@@ -20,7 +20,7 @@ class CardFacadeTest extends Specification implements SampleCards {
 
     def "fill empty repo with recent cards"() {
         given: "Empty card repository"
-        assert(repo.getAll().size() == 0)
+        assert (repo.getAll().size() == 0)
         and: "JsonFile with recent cards data"
         fileProvider.getCardsJsonFileReleasedAfter(_ as LocalDate) >> file
         when: "I invoke update"
@@ -39,7 +39,7 @@ class CardFacadeTest extends Specification implements SampleCards {
         then: "I see repo with new and old cards"
         repoContainsNewCardsAndOldCards()
         then: "I see all Cards updateDate has changed"
-        repo.getAll().each { it.getLastUpdate().isEqual(LocalDate.now()) }
+        repo.getAll().each { assert (it.getLastUpdate().isEqual(LocalDate.now())) }
     }
 
     def "don't update repo as no new cards were found"() {
@@ -52,10 +52,23 @@ class CardFacadeTest extends Specification implements SampleCards {
         then: "I see repo with old card only"
         repoContainsOnlyCards(lastWeekCard)
         then: "I see that cards update date hasn't changed"
-        repo.getAll().each { it.getLastUpdate().isEqual(lastWeekCard.lastUpdate) }
+        repo.getAll().each { assert (it.getLastUpdate().isEqual(lastWeekCard.lastUpdate)) }
     }
 
-    def repoContainsOnlyCards(Card... cards){
+    def "don't update repo with new information about lastWeekCard"() {
+        given: "Repo with lastWeekCard"
+        repo.save(lastWeekCard.dto())
+        and: "no recent cards data"
+        fileProvider.getCardsJsonFileReleasedAfter(lastWeekCard.lastUpdate as LocalDate) >> null
+        when: "I invoke update"
+        facade.updateCardRepository()
+        then: "I see repo with old card only"
+        repoContainsOnlyCards(lastWeekCard)
+        then: "I see that cards update date hasn't changed"
+        repo.getAll().filter({ c -> c.refersTo(lastWeekCard.dto()) }).first().getLastUpdate() == LocalDate.now()
+    }
+
+    def repoContainsOnlyCards(Card... cards) {
         def cardUuidsFromRepo = repo.getAll()
                 .map({ card -> card.dto() })
                 .map({ dto -> dto.getUuid() })

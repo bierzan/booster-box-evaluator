@@ -3,22 +3,28 @@ package com.brzn.box_eval.card.domain;
 import com.brzn.box_eval.card.dto.CardDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vavr.collection.List;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
 
 @Slf4j
-@AllArgsConstructor
-class CardMapper { //todo test na mapowanie kart
+@RequiredArgsConstructor
+class CardMapper {
 
     private final ObjectMapper mapper;
 
     public List<CardDto> fromJsonListFile(File file) {
+        if (file == null) {
+            log.info("requested File is null.");
+            return List.empty();
+        }
+
         try {
-            return List.of(mapper.readValue(file, CardDto[].class));
-        } catch (IOException e) { //todo unit test
+            return List.of(mapper.readValue(file, CardDto[].class))
+                    .filter(CardDto::isValid);
+        } catch (IOException e) {
             log.info("Can't parse json file to List<CardDto>");
             e.printStackTrace();
             return List.empty();
