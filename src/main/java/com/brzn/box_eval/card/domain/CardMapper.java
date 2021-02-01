@@ -19,7 +19,7 @@ class CardMapper { //todo test na mapowanie kart
         try {
             return List.of(mapper.readValue(file, CardDto[].class));
         } catch (IOException e) { //todo unit test
-            log.info("Can't parse json file to <List<CardDto>>. CardCache update failed");
+            log.info("Can't parse json file to List<CardDto>");
             e.printStackTrace();
             return List.empty();
         }

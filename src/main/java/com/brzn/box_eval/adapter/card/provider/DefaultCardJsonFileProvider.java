@@ -5,35 +5,21 @@ import com.brzn.box_eval.infrastructure.client.Client;
 import io.vavr.control.Option;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.time.LocalDate;
 
 @Slf4j
 @RequiredArgsConstructor
 public class DefaultCardJsonFileProvider implements CardJsonFileProvider {
-    public static final String FILE_PATH = "cards.json";
+    private static final String FILE_PATH = "cards.json";
+    private final FileDownloader downloader;
     private final Client client;
 
     @Override
     public File getCardsJsonFileReleasedAfter(LocalDate date) {
         return Option.of(client.getUrlForCardDateUpdatedAfter(date))
-                .map(this::saveUrlToJsonFile)
+                .map(url -> downloader.getFileFromUrl(url, FILE_PATH))
                 .getOrNull();
-    }
-
-    private File saveUrlToJsonFile(URL url) {
-        try {
-            log.info(String.format("Downloading file from url %s", url.toString()));
-            FileUtils.copyURLToFile(url, new File(FILE_PATH));
-            return FileUtils.getFile(FILE_PATH);
-        } catch (IOException e) {
-            log.info(String.format("Downloading file from url %s failed. card.json file not saved", url.toString()));
-            e.printStackTrace();
-        }
-        return null;
     }
 }

@@ -36,6 +36,7 @@ class CardUpdater {
     private void updateCardRepoFromJsonFile(File file) {
         log.info("Updating Card Inventory with card data from cards.json file");
         List<CardDto> cards = cardMapper.fromJsonListFile(file);
+        log.info("Updating card repository with {} new files, parsed from json", cards.size());
         repo.updateAll(cards);
     }
 }

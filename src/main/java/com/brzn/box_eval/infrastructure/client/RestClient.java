@@ -27,7 +27,7 @@ public class RestClient implements Client {
     }
 
     @Override
-    public URL getUrlForCardDateUpdatedAfter(LocalDate lastUpdate) {
+    public URL getUrlForCardDateUpdatedAfter(LocalDate lastUpdate) { //todo test na nulla
         return scryfall.getUrlForCardDateUpdatedAfter(lastUpdate);
     }
 }

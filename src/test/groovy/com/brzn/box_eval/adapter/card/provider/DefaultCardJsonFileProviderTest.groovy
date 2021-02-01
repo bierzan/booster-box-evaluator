@@ -7,12 +7,58 @@ import java.time.LocalDate
 
 class DefaultCardJsonFileProviderTest extends Specification {
     def client = Mock(Client)
-    def fileProvider = new DefaultCardJsonFileProvider(client)
+    def downloader = Mock(FileDownloader)
+    def fileProvider = new DefaultCardJsonFileProvider(downloader, client)
+    def fileToDownloadURL = new URL("http://url")
+    def expectedFile = new File("file")
 
-    def "should provide file"(){
+    def "should provide downloaded file"() {
+        given:"url to download file"
+        stubGettingUrl(fileToDownloadURL)
+        and: "downloaded file"
+        stubDownloadingFile(expectedFile)
         when:
-        fileProvider.getCardsJsonFileReleasedAfter(LocalDate.now())
+        def file = fileProvider.getCardsJsonFileReleasedAfter(LocalDate.now())
         then:
-        1==2
+        file == expectedFile
+    }
+
+    def "should provide downloaded file when requested date is null"() {
+        given:"url to download file"
+        stubGettingUrl(fileToDownloadURL)
+        and: "downloaded file"
+        stubDownloadingFile(expectedFile)
+        when:
+        def file = fileProvider.getCardsJsonFileReleasedAfter(null)
+        then:
+        file == expectedFile
+    }
+
+    def "should return null when downloader responded with null file"() {
+        given:"url to download file"
+        stubGettingUrl(fileToDownloadURL)
+        and: "downloaded file"
+        stubDownloadingFile(null)
+        when:
+        def file = fileProvider.getCardsJsonFileReleasedAfter(LocalDate.now())
+        then:
+        file == null
+    }
+
+    def "should return null when client didn't provide url"() {
+        given:"url to download file"
+        stubGettingUrl(null)
+        when:
+        def file = fileProvider.getCardsJsonFileReleasedAfter(LocalDate.now())
+        then:
+        file == null
+    }
+
+    private void stubGettingUrl(URL url) {
+        client.getUrlForCardDateUpdatedAfter(_) >> url
+    }
+
+    private void stubDownloadingFile(File file) {
+        downloader.getFileFromUrl(_ as URL, _ as String) >> file
     }
 }
