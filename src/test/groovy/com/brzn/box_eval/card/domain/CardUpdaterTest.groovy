@@ -1,25 +1,27 @@
 package com.brzn.box_eval.card.domain
 
-
 import com.brzn.box_eval.card.port.CardJsonFileProvider
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.apache.commons.io.FileUtils
 import spock.lang.Specification
 
 import java.time.LocalDate
+
+import static com.brzn.box_eval.card.domain.CardJsonTestUtil.getBulkDataReferenceFile
+import static com.brzn.box_eval.card.domain.CardJsonTestUtil.mapJson2CardDtos
+
 
 class CardUpdaterTest extends Specification {
     def fileProvider = Mock(CardJsonFileProvider)
     def mapper = new CardMapper(new ObjectMapper())
     def repository = Mock(CardRepository)
     def updater = new CardUpdater(repository, mapper, fileProvider)
-    def cardBulkDataFile = FileUtils.getFile("src/test/resources/cardBulkData.json")
-    def cardsFromJsonFile = mapper.fromJsonListFile(cardBulkDataFile)
+    def referenceBulkDataFile = getBulkDataReferenceFile()
+    def cardsFromJsonFile = mapJson2CardDtos(referenceBulkDataFile)
 
     def "should call update on card repository with recent cards"() {
         given:
         stubFindingLastCardUpdateDate(LocalDate.now())
-        stubGettingJsonFIle(cardBulkDataFile)
+        stubGettingJsonFIle(referenceBulkDataFile)
         when:
         updater.update()
         then:
@@ -29,7 +31,7 @@ class CardUpdaterTest extends Specification {
     def "should call update on card repository with recent cards without last update date info"() {
         given:
         stubFindingLastCardUpdateDate(null);
-        stubGettingJsonFIle(cardBulkDataFile)
+        stubGettingJsonFIle(referenceBulkDataFile)
         when:
         updater.update()
         then:

@@ -3,15 +3,12 @@ package com.brzn.box_eval.card.domain
 import com.brzn.box_eval.card.dto.CardDto
 import com.brzn.box_eval.card.port.CardJsonFileProvider
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import io.vavr.collection.List
-import org.apache.commons.io.FileUtils
 import spock.lang.Specification
 
 import java.time.LocalDate
 
-import static com.brzn.box_eval.card.domain.CardsFromResources.mapJson2CardDtos
+import static com.brzn.box_eval.card.domain.CardJsonTestUtil.*
 
 class CardFacadeTest extends Specification implements SampleCards {
     def repo = new InMemoryCardRepository()
@@ -20,21 +17,21 @@ class CardFacadeTest extends Specification implements SampleCards {
     def mapper = new CardMapper(new ObjectMapper())
     def updater = new CardUpdater(repo, mapper, fileProvider)
     def facade = new CardFacade(updater, query)
-    def exampleBulkDataFile = FileUtils.getFile("src/test/resources/cardBulkData.json") //todo abstrakt z utilsami do testowania jsonow
+    def referenceBulkDataFile = getBulkDataReferenceFile()
 
     def cleanup() {
-        FileUtils.deleteQuietly(new File("src/test/resources/tempJsons"))
+        deleteTemporaryJsons()
     }
 
     def "fill empty repo with recent cards"() {
         given: "Empty card repository"
         assert (repo.getAll().size() == 0)
         and: "JsonFile with recent cards data"
-        fileProvider.getCardsJsonFileReleasedAfter(_ as LocalDate) >> exampleBulkDataFile
+        fileProvider.getCardsJsonFileReleasedAfter(_ as LocalDate) >> referenceBulkDataFile
         when: "I invoke update"
         facade.updateCardRepository()
         then: "I see repo with new cards"
-        repoHasAllCardsFromFile(exampleBulkDataFile)
+        repoHasAllCardsFromFile(referenceBulkDataFile)
         and: "I see that all cards have current updateDate"
         allCardsInRepoHaveGivenUpdateDate(LocalDate.now())
     }
@@ -43,14 +40,14 @@ class CardFacadeTest extends Specification implements SampleCards {
         given: "Repo with lastWeekCard"
         repo.save(lastWeekCard.dto())
         and: "JsonFile with recent cards data"
-        fileProvider.getCardsJsonFileReleasedAfter(lastWeekCard.lastUpdate as LocalDate) >> exampleBulkDataFile
+        fileProvider.getCardsJsonFileReleasedAfter(lastWeekCard.lastUpdate as LocalDate) >> referenceBulkDataFile
         when: "I invoke update"
         facade.updateCardRepository()
         then: "I see repo with new and old cards"
-        def newAndOldCards = mapJson2CardDtos(exampleBulkDataFile).append(lastWeekCard.dto())
+        def newAndOldCards = mapJson2CardDtos(referenceBulkDataFile).append(lastWeekCard.dto())
         repoContainsOnlyCardsFromList(newAndOldCards)
         and: "I see all newly provided Cards have new updateDate changed"
-        assertThatCardsHaveRecentUpdateDateInRepo(mapJson2CardDtos(exampleBulkDataFile))
+        assertThatCardsHaveRecentUpdateDateInRepo(mapJson2CardDtos(referenceBulkDataFile))
     }
 
     def "update existing cards data"() {
@@ -59,7 +56,7 @@ class CardFacadeTest extends Specification implements SampleCards {
         repo.save(veryOldCard.dto())
         and: "JsonFile with updated price of veryOldCard card"
         def cardWithNewPrice = updateCardWithNewPrice(veryOldCard, "666.66")
-        def updatedCardsFile = writeJsonArrayFileFromCards("updatedCards", cardWithNewPrice)
+        def updatedCardsFile = getTempJsonCardsArrayFileFromCards("updatedCards", cardWithNewPrice)
         fileProvider.getCardsJsonFileReleasedAfter(_ as LocalDate) >> updatedCardsFile
         when: "I invoke update"
         facade.updateCardRepository()
@@ -116,30 +113,10 @@ class CardFacadeTest extends Specification implements SampleCards {
         return cardsFromRepo == getAllUuidsFromCardsListSorted(cards)
     }
 
-    private CardDto updateCardWithNewPrice(Card card, String newPrice) {
+    def updateCardWithNewPrice(Card card, String newPrice) {
         def cardWithNewPrice = card.dto()
         cardWithNewPrice.setPrice(new BigDecimal(newPrice))
-        cardWithNewPrice
-    }
-
-    def writeJsonArrayFileFromCards(String jsonName, CardDto... cards) {
-        JsonArray jsonArray = new JsonArray()
-        cards.each { card ->
-            JsonObject jsonCard = new JsonObject()
-            jsonCard.addProperty("name", card.name)
-            jsonCard.addProperty("released_at", card.releasedAt.toString())
-            jsonCard.addProperty("set", card.setCode)
-            jsonCard.addProperty("set_name", card.setName)
-            jsonCard.addProperty("id", card.uuid)
-
-            JsonObject priceJson = new JsonObject();
-            priceJson.addProperty("eur", card.price.toString())
-            jsonCard.add("prices", priceJson)
-            jsonArray.add(jsonCard)
-        }
-
-        FileUtils.write(new File("src/test/resources/tempJsons/" + jsonName + ".json"), jsonArray.toString())
-        return FileUtils.getFile("src/test/resources/tempJsons/" + jsonName + ".json")
+        return cardWithNewPrice
     }
 
     def repoContainsOnlyCards(CardDto... cards) {

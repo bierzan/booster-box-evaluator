@@ -3,32 +3,31 @@ package com.brzn.box_eval.card.domain
 import com.brzn.box_eval.card.dto.CardDto
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.vavr.collection.List
-import org.apache.commons.io.FileUtils
-import org.json.JSONArray
-import org.json.JSONObject
 import spock.lang.Specification
 
-import java.nio.charset.Charset
-import java.time.LocalDate
+import static com.brzn.box_eval.card.domain.CardJsonTestUtil.*
 
-class CardMapperTest extends Specification { //todo przygotowywanie testowych jsonow w locie?
+class CardMapperTest extends Specification {
     private File file
-    def fileAsJson = parseReferenceFileToJson()
     private List<CardDto> cards
     def cardMapper = new CardMapper(new ObjectMapper())
 
+    def cleanup() {
+        deleteTemporaryJsons()
+    }
+
     def "should parse json file to cards list"() {
         given:
-        setFilePath("src/test/resources/cardBulkData.json")
+        file = getBulkDataReferenceFile()
         when:
         cards = cardMapper.fromJsonListFile(file)
         then:
-        cards.map({ c -> c.uuid }).sort() == getPropertiesFromJsonFile("id").sort()
-        cards.map({ c -> c.name }).sort() == getPropertiesFromJsonFile("name").sort()
-        cards.map({ c -> c.setName }).sort() == getPropertiesFromJsonFile("set_name").sort()
-        cards.map({ c -> c.setCode }).sort() == getPropertiesFromJsonFile("set").sort()
-        cards.map({ c -> c.releasedAt }).sort() == getDatePropertiesFromJsonFile("released_at").sort()
-        cards.map({ c -> c.price }).sort() == getPricesFromJsonFile().sort()
+        cards.map({ c -> c.uuid }).sort() == getPropertiesFromCardJsonFile(file, "id").sort()
+        cards.map({ c -> c.name }).sort() == getPropertiesFromCardJsonFile(file, "name").sort()
+        cards.map({ c -> c.setName }).sort() == getPropertiesFromCardJsonFile(file, "set_name").sort()
+        cards.map({ c -> c.setCode }).sort() == getPropertiesFromCardJsonFile(file, "set").sort()
+        cards.map({ c -> c.releasedAt }).sort() == getDatePropertiesFromJsonFile(file, "released_at").sort()
+        cards.map({ c -> c.price }).sort() == getPricesFromCardJsonFile(file).sort()
     }
 
     def "should return empty list when file is null"() {
@@ -40,16 +39,16 @@ class CardMapperTest extends Specification { //todo przygotowywanie testowych js
 
     def "should return empty list when file refers to non existing file"() {
         given:
-        setFilePath("src/test/resources/nonExistingFile.json")
+        file = new File("nonExistingFile.json")
         when:
         cards = cardMapper.fromJsonListFile(file)
         then:
         cards.isEmpty()
     }
 
-    def "should return empty list when file refers to invalid cards file"() {
+    def "should return empty list when file refers to different json array  file"() {
         given:
-        setFilePath("src/test/resources/invalidCards.json")
+        file = getRandomJsonArray()
         when:
         cards = cardMapper.fromJsonListFile(file)
         then:
@@ -58,7 +57,7 @@ class CardMapperTest extends Specification { //todo przygotowywanie testowych js
 
     def "should return empty list when file refers to json with single object"() {
         given:
-        setFilePath("src/test/resources/singleCard.json")
+        file = getTempSingleCardJsonFromBulkDataReferenceFile()
         when:
         cards = cardMapper.fromJsonListFile(file)
         then:
@@ -67,47 +66,10 @@ class CardMapperTest extends Specification { //todo przygotowywanie testowych js
 
     def "should return empty list when filPath refers to unparseable file"() {
         given:
-        setFilePath("src/test/resources/unparseableJson.json")
+        file = getTempUnparseableJsonFile()
         when:
         cards = cardMapper.fromJsonListFile(file)
         then:
         cards.isEmpty()
     }
-
-    private File setFilePath(String path) {
-        file = FileUtils.getFile(path)
-    }
-
-    def getPricesFromJsonFile() {
-        List<BigDecimal> pricesInEuro = List.empty();
-        for (int i = 0; i < fileAsJson.length(); i++){
-            JSONObject jsonobject = fileAsJson.getJSONObject(i);
-            def priceInEuro = jsonobject.getJSONObject("prices").getString("eur")
-            pricesInEuro = pricesInEuro.append(new BigDecimal(priceInEuro))
-        }
-        return pricesInEuro
-    }
-
-    def getPropertiesFromJsonFile(String property) {
-        List<String> ids = List.empty();
-        for (int i = 0; i < fileAsJson.length(); i++){
-            ids = ids.append(fileAsJson.getJSONObject(i).getString(property))
-        }
-        return ids;
-    }
-
-    def getDatePropertiesFromJsonFile(String property) {
-        List<LocalDate> ids = List.empty();
-        for (int i = 0; i < fileAsJson.length(); i++){
-            def dateAsString = fileAsJson.getJSONObject(i).getString(property)
-            ids = ids.append(LocalDate.parse(dateAsString))
-        }
-        return ids;
-    }
-
-    def JSONArray parseReferenceFileToJson() {
-        new JSONArray(FileUtils.readFileToString(FileUtils.getFile("src/test/resources/cardBulkData.json"), Charset.forName("UTF-8")))
-    }
-
-    //todo ustawic typowanie
 }
