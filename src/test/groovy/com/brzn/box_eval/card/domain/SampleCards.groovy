@@ -12,6 +12,7 @@ trait SampleCards {
             .releasedAt(LocalDate.now())
             .setName("todaySet")
             .setCode("ts")
+            .price(new BigDecimal("0.1"))
             .build();
 
     Card lastWeekCard = Card.builder()
@@ -21,5 +22,16 @@ trait SampleCards {
             .lastUpdate(LocalDate.now().minusWeeks(1))
             .setName("lastWeekSet")
             .setCode("lws")
+            .price(new BigDecimal("6.01"))
+            .build();
+
+    Card veryOldCard = Card.builder()
+            .uuid("veryOldUUID")
+            .name("veryOldCard")
+            .releasedAt(LocalDate.MIN)
+            .lastUpdate(LocalDate.MIN)
+            .setName("veryOldSet")
+            .setCode("vos")
+            .price(new BigDecimal("122.21"))
             .build();
 }

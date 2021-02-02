@@ -1,12 +1,17 @@
 package com.brzn.box_eval.card.domain
 
+import com.brzn.box_eval.card.dto.CardDto
 import com.brzn.box_eval.card.port.CardJsonFileProvider
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import io.vavr.collection.List
 import org.apache.commons.io.FileUtils
 import spock.lang.Specification
 
 import java.time.LocalDate
+
+import static com.brzn.box_eval.card.domain.CardsFromResources.mapJson2CardDtos
 
 class CardFacadeTest extends Specification implements SampleCards {
     def repo = new InMemoryCardRepository()
@@ -15,31 +20,51 @@ class CardFacadeTest extends Specification implements SampleCards {
     def mapper = new CardMapper(new ObjectMapper())
     def updater = new CardUpdater(repo, mapper, fileProvider)
     def facade = new CardFacade(updater, query)
-    def file = FileUtils.getFile("src/test/resources/cardBulkData.json")
-    def fromJsonFileCards = CardsFromResources.readJson2CardDtos(file)
+    def exampleBulkDataFile = FileUtils.getFile("src/test/resources/cardBulkData.json") //todo abstrakt z utilsami do testowania jsonow
+
+    def cleanup() {
+        FileUtils.deleteQuietly(new File("src/test/resources/tempJsons"))
+    }
 
     def "fill empty repo with recent cards"() {
         given: "Empty card repository"
         assert (repo.getAll().size() == 0)
         and: "JsonFile with recent cards data"
-        fileProvider.getCardsJsonFileReleasedAfter(_ as LocalDate) >> file
+        fileProvider.getCardsJsonFileReleasedAfter(_ as LocalDate) >> exampleBulkDataFile
         when: "I invoke update"
         facade.updateCardRepository()
         then: "I see repo with new cards"
-        repo.getAll().map({ card -> card.dto().uuid }).sort() == fromJsonFileCards.map({ card -> card.uuid }).sort()
+        repoHasAllCardsFromFile(exampleBulkDataFile)
+        and: "I see that all cards have current updateDate"
+        allCardsInRepoHaveGivenUpdateDate(LocalDate.now())
     }
 
     def "update repo with recent cards"() {
         given: "Repo with lastWeekCard"
         repo.save(lastWeekCard.dto())
         and: "JsonFile with recent cards data"
-        fileProvider.getCardsJsonFileReleasedAfter(lastWeekCard.lastUpdate as LocalDate) >> file
+        fileProvider.getCardsJsonFileReleasedAfter(lastWeekCard.lastUpdate as LocalDate) >> exampleBulkDataFile
         when: "I invoke update"
         facade.updateCardRepository()
         then: "I see repo with new and old cards"
-        repoContainsNewCardsAndOldCards()
-        then: "I see all Cards updateDate has changed"
-        repo.getAll().each { assert (it.getLastUpdate().isEqual(LocalDate.now())) }
+        def newAndOldCards = mapJson2CardDtos(exampleBulkDataFile).append(lastWeekCard.dto())
+        repoContainsOnlyCardsFromList(newAndOldCards)
+        and: "I see all newly provided Cards have new updateDate changed"
+        assertThatCardsHaveRecentUpdateDateInRepo(mapJson2CardDtos(exampleBulkDataFile))
+    }
+
+    def "update existing cards data"() {
+        given: "Repo with lastWeekCard and veryOldCard"
+        repo.save(lastWeekCard.dto())
+        repo.save(veryOldCard.dto())
+        and: "JsonFile with updated price of veryOldCard card"
+        def cardWithNewPrice = updateCardWithNewPrice(veryOldCard, "666.66")
+        def updatedCardsFile = writeJsonArrayFileFromCards("updatedCards", cardWithNewPrice)
+        fileProvider.getCardsJsonFileReleasedAfter(_ as LocalDate) >> updatedCardsFile
+        when: "I invoke update"
+        facade.updateCardRepository()
+        then: "I see that veryOldCard has new lastUpdate date and price"
+        repoUpdatedDataForGivenCard(cardWithNewPrice)
     }
 
     def "don't update repo as no new cards were found"() {
@@ -50,53 +75,84 @@ class CardFacadeTest extends Specification implements SampleCards {
         when: "I invoke update"
         facade.updateCardRepository()
         then: "I see repo with old card only"
-        repoContainsOnlyCards(lastWeekCard)
+        repoContainsOnlyCards(lastWeekCard.dto())
         then: "I see that cards update date hasn't changed"
-        repo.getAll().each { assert (it.getLastUpdate().isEqual(lastWeekCard.lastUpdate)) }
+        allCardsInRepoHaveGivenUpdateDate(lastWeekCard.dto().lastUpdate)
     }
 
-    def "don't update repo with new information about lastWeekCard"() {
-        given: "Repo with lastWeekCard"
-        repo.save(lastWeekCard.dto())
-        and: "no recent cards data"
-        fileProvider.getCardsJsonFileReleasedAfter(lastWeekCard.lastUpdate as LocalDate) >> null
-        when: "I invoke update"
-        facade.updateCardRepository()
-        then: "I see repo with old card only"
-        repoContainsOnlyCards(lastWeekCard)
-        then: "I see that cards update date hasn't changed"
-        repo.getAll().filter({ c -> c.refersTo(lastWeekCard.dto()) }).first().getLastUpdate() == LocalDate.now()
+    private Iterable<Card> repoUpdatedDataForGivenCard(cardWithNewPrice) {
+        repo.getAll().each { card ->
+            if (card.dto().uuid == cardWithNewPrice.uuid) {
+                assert (card.lastUpdate == LocalDate.now())
+                assert (card.dto().price == cardWithNewPrice.getPrice())
+            }
+        }
     }
 
-    def repoContainsOnlyCards(Card... cards) {
-        def cardUuidsFromRepo = repo.getAll()
+    def repoHasAllCardsFromFile(File file) {
+        def uuidsFromRepo = getAllUuidsFromRepoSorted()
+        def uuidsFromFile = getAllUuidsFromCardsListSorted(mapJson2CardDtos(file))
+        return uuidsFromRepo.containsAll(uuidsFromFile)
+    }
+
+    def getAllUuidsFromCardsListSorted(List<CardDto> cards) {
+        cards.map({ card -> card.uuid })
+                .sorted()
+    }
+
+    private List<String> getAllUuidsFromRepoSorted() {
+        repo.getAll()
+                .map({ card -> card.dto().uuid })
+                .collect(List.collector())
+                .sorted()
+    }
+
+    def assertThatCardsHaveRecentUpdateDateInRepo(List<CardDto> cards) {
+        def cardsFromRepo = repo.getAll()
                 .map({ card -> card.dto() })
-                .map({ dto -> dto.getUuid() })
-                .collect(List.collector())
-
-        def expectedUuids = Arrays.stream(cards)
-                .map({ card -> card.dto() })
-                .map({ dto -> dto.uuid })
-                .collect(List.collector())
-
-        return cardUuidsFromRepo.containsAll(expectedUuids) &&
-                expectedUuids.containsAll(cardUuidsFromRepo)
+                .filter({ card -> card.lastUpdate == LocalDate.now() })
+                .map({ card -> card.uuid })
+                .sorted()
+        return cardsFromRepo == getAllUuidsFromCardsListSorted(cards)
     }
 
-    def repoContainsNewCardsAndOldCards() {
-        def cardUuidsFromRepo = repo.getAll()
-                .map({ card -> card.dto() })
-                .map({ dto -> dto.getUuid() })
-                .collect(List.collector())
-
-        fromJsonFileCards = fromJsonFileCards.append(lastWeekCard.dto())
-
-        def expectedUuids = fromJsonFileCards
-                .map({ c -> c.uuid })
-                .collect(List.collector())
-
-        return cardUuidsFromRepo.containsAll(expectedUuids) &&
-                expectedUuids.containsAll(cardUuidsFromRepo)
+    private CardDto updateCardWithNewPrice(Card card, String newPrice) {
+        def cardWithNewPrice = card.dto()
+        cardWithNewPrice.setPrice(new BigDecimal(newPrice))
+        cardWithNewPrice
     }
 
+    def writeJsonArrayFileFromCards(String jsonName, CardDto... cards) {
+        JsonArray jsonArray = new JsonArray()
+        cards.each { card ->
+            JsonObject jsonCard = new JsonObject()
+            jsonCard.addProperty("name", card.name)
+            jsonCard.addProperty("released_at", card.releasedAt.toString())
+            jsonCard.addProperty("set", card.setCode)
+            jsonCard.addProperty("set_name", card.setName)
+            jsonCard.addProperty("id", card.uuid)
+
+            JsonObject priceJson = new JsonObject();
+            priceJson.addProperty("eur", card.price.toString())
+            jsonCard.add("prices", priceJson)
+            jsonArray.add(jsonCard)
+        }
+
+        FileUtils.write(new File("src/test/resources/tempJsons/" + jsonName + ".json"), jsonArray.toString())
+        return FileUtils.getFile("src/test/resources/tempJsons/" + jsonName + ".json")
+    }
+
+    def repoContainsOnlyCards(CardDto... cards) {
+        return repoContainsOnlyCardsFromList(List.of(cards))
+    }
+
+    def repoContainsOnlyCardsFromList(List<CardDto> cards) {
+        return getAllUuidsFromRepoSorted() == getAllUuidsFromCardsListSorted(cards)
+    }
+
+    def allCardsInRepoHaveGivenUpdateDate(LocalDate date) {
+        repo.getAll().each { card ->
+            assert (card.getLastUpdate().isEqual(date))
+        }
+    }
 }

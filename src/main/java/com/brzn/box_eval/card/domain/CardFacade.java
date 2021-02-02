@@ -18,9 +18,4 @@ public class CardFacade {
     public List<CardDto> findCardsReleasedAfter(LocalDate date) {
         return provider.findCardsReleasedAfter(date);
     }
-
-    public List<CardDto> getAllCards() {
-        return provider.getAll();
-    }
-
 }

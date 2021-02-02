@@ -7,7 +7,7 @@ import io.vavr.collection.List
 
 @CompileStatic
 class CardsFromResources {
-    static List<CardDto> readJson2CardDtos(File file) {
+    static List<CardDto> mapJson2CardDtos(File file) {
         def mapper = new ObjectMapper()
         try {
             return List.of(mapper.readValue(file, CardDto[].class));
