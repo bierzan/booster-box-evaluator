@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @Builder
 @JsonIgnoreProperties
 public class Card {
+    long id;
+    long uuid;
     String name;
     LocalDate releasedAt;
     String setName;

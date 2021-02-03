@@ -1,8 +1,8 @@
 package com.brzn.box_eval.box.domain;
 
 import com.brzn.box_eval.box.dto.BoxCardSetType;
-import com.brzn.box_eval.mtg_io_client.dto.CardSet;
-import com.brzn.box_eval.mtg_io_client.dto.CardSetType;
+import com.brzn.box_eval.box.dto.CardSetProperties;
+import com.brzn.box_eval.box.dto.CardSetType;
 import io.vavr.control.Option;
 import lombok.AllArgsConstructor;
 
@@ -11,14 +11,14 @@ class BoxCreator {
 
     private final BoosterSchemaCreator boosterSchemaCreator;
 
-    Box from(CardSet cardSet) {
+    Box from(CardSetProperties cardSetProperties) {
         return Box.builder()
-                .releaseDate(cardSet.getReleaseDate())
-                .cardSetName(cardSet.getName())
-                .cardSetCode(cardSet.getCode())
-                .boxCardSetType(from(cardSet.getType()))
-                .boosterSchema(boosterSchemaCreator.from(cardSet.getBooster()))
-                .boosterQuantity(getBoosterQuantity(cardSet))
+                .releaseDate(cardSetProperties.getReleaseDate())
+                .cardSetName(cardSetProperties.getName())
+                .cardSetCode(cardSetProperties.getCode())
+                .boxCardSetType(from(cardSetProperties.getType()))
+                .boosterSchema(boosterSchemaCreator.from(cardSetProperties.getBooster()))
+                .boosterQuantity(getBoosterQuantity(cardSetProperties))
                 .build();
     }
 
@@ -29,12 +29,12 @@ class BoxCreator {
                 .getOrNull();
     }
 
-    private int getBoosterQuantity(CardSet cardSet) {
-        if ("Conspiracy".equals(cardSet.getBlock())) {
+    private int getBoosterQuantity(CardSetProperties cardSetProperties) {
+        if ("Conspiracy".equals(cardSetProperties.getBlock())) {
             return 24;
         }
-        return cardSet.getType() != null &&
-                BoxCardSetType.MASTERS.toString().equals(cardSet.getType().toString()) ?
+        return cardSetProperties.getType() != null &&
+                BoxCardSetType.MASTERS.toString().equals(cardSetProperties.getType().toString()) ?
                 24 : 36;
     }
 }

@@ -1,22 +1,16 @@
 package com.brzn.box_eval.scryfall_client;
 
-import com.brzn.box_eval.scryfall_client.dto.Card;
-import io.vavr.collection.List;
+import com.brzn.box_eval.scryfall_client.dto.CardBulkDataInfo;
+import lombok.AllArgsConstructor;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDate;
-
+@AllArgsConstructor
 class ScryfallRestTemplate {
 
-    private RestTemplate restTemplate;
+    public static final String URL_DEFAULT_BULK_DATA_INFO = "https://api.scryfall.com/bulk-data/e2ef41e3-5778-4bc2-af3f-78eca4dd9c23";
+    private final RestTemplate restTemplate;
 
-    public ScryfallRestTemplate(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
-    public List<Card> findCardsReleasedAfter(LocalDate releaseDate){
-        return null;
+    public CardBulkDataInfo getCardBulkDataInfo() {
+        return restTemplate.getForObject(URL_DEFAULT_BULK_DATA_INFO, CardBulkDataInfo.class);
     }
 }
-
-//todo https://api.scryfall.com/cards?q=date%3E2015-08-18
