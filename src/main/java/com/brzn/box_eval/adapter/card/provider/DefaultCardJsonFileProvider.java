@@ -1,5 +1,6 @@
 package com.brzn.box_eval.adapter.card.provider;
 
+import com.brzn.box_eval.application.FileDownloader;
 import com.brzn.box_eval.card.port.CardJsonFileProvider;
 import com.brzn.box_eval.infrastructure.client.Client;
 import io.vavr.control.Option;

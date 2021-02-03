@@ -8,7 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-public class PriceDeserializer extends JsonDeserializer {
+public class PriceDeserializer extends JsonDeserializer { //todo wyniesc gdzies indziej
+
     @Override
     public Object deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         JsonNode arrayNode = jsonParser.readValueAsTree();

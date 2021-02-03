@@ -11,13 +11,13 @@ import java.time.LocalDate
 import static com.brzn.box_eval.card.domain.CardJsonTestUtil.*
 
 class CardFacadeTest extends Specification implements SampleCards {
-    def repo = new InMemoryCardRepository()
-    def query = new CardQuery(repo)
-    def fileProvider = Mock(CardJsonFileProvider)
-    def mapper = new CardMapper(new ObjectMapper())
-    def updater = new CardUpdater(repo, mapper, fileProvider)
-    def facade = new CardFacade(updater, query)
-    def referenceBulkDataFile = getBulkDataReferenceFile()
+    private CardRepository repo = new InMemoryCardRepository()
+    private CardQuery query = new CardQuery(repo)
+    private CardJsonFileProvider fileProvider = Mock(CardJsonFileProvider)
+    private CardMapper mapper = new CardMapper(new ObjectMapper())
+    private CardUpdater updater = new CardUpdater(repo, mapper, fileProvider)
+    private CardFacade facade = new CardFacade(updater, query)
+    private File referenceBulkDataFile = getBulkDataReferenceFile()
 
     def cleanup() {
         deleteTemporaryJsons()
@@ -47,7 +47,7 @@ class CardFacadeTest extends Specification implements SampleCards {
         def newAndOldCards = mapJson2CardDtos(referenceBulkDataFile).append(lastWeekCard.dto())
         repoContainsOnlyCardsFromList(newAndOldCards)
         and: "I see all newly provided Cards have new updateDate changed"
-        assertThatCardsHaveRecentUpdateDateInRepo(mapJson2CardDtos(referenceBulkDataFile))
+        cardsHaveRecentUpdateDateInRepo(mapJson2CardDtos(referenceBulkDataFile))
     }
 
     def "update existing cards data"() {
@@ -77,7 +77,7 @@ class CardFacadeTest extends Specification implements SampleCards {
         allCardsInRepoHaveGivenUpdateDate(lastWeekCard.dto().lastUpdate)
     }
 
-    private Iterable<Card> repoUpdatedDataForGivenCard(cardWithNewPrice) {
+    private void repoUpdatedDataForGivenCard(cardWithNewPrice) {
         repo.getAll().each { card ->
             if (card.dto().uuid == cardWithNewPrice.uuid) {
                 assert (card.lastUpdate == LocalDate.now())
@@ -86,25 +86,25 @@ class CardFacadeTest extends Specification implements SampleCards {
         }
     }
 
-    def repoHasAllCardsFromFile(File file) {
+    private boolean repoHasAllCardsFromFile(File file) {
         def uuidsFromRepo = getAllUuidsFromRepoSorted()
         def uuidsFromFile = getAllUuidsFromCardsListSorted(mapJson2CardDtos(file))
         return uuidsFromRepo.containsAll(uuidsFromFile)
     }
 
-    def getAllUuidsFromCardsListSorted(List<CardDto> cards) {
-        cards.map({ card -> card.uuid })
+    private List<String> getAllUuidsFromCardsListSorted(List<CardDto> cards) {
+        return cards.map({ card -> card.uuid })
                 .sorted()
     }
 
     private List<String> getAllUuidsFromRepoSorted() {
-        repo.getAll()
+        return repo.getAll()
                 .map({ card -> card.dto().uuid })
                 .collect(List.collector())
                 .sorted()
     }
 
-    def assertThatCardsHaveRecentUpdateDateInRepo(List<CardDto> cards) {
+    private boolean cardsHaveRecentUpdateDateInRepo(List<CardDto> cards) {
         def cardsFromRepo = repo.getAll()
                 .map({ card -> card.dto() })
                 .filter({ card -> card.lastUpdate == LocalDate.now() })
@@ -113,21 +113,21 @@ class CardFacadeTest extends Specification implements SampleCards {
         return cardsFromRepo == getAllUuidsFromCardsListSorted(cards)
     }
 
-    def updateCardWithNewPrice(Card card, String newPrice) {
+    private CardDto updateCardWithNewPrice(Card card, String newPrice) {
         def cardWithNewPrice = card.dto()
         cardWithNewPrice.setPrice(new BigDecimal(newPrice))
         return cardWithNewPrice
     }
 
-    def repoContainsOnlyCards(CardDto... cards) {
+    private boolean repoContainsOnlyCards(CardDto... cards) {
         return repoContainsOnlyCardsFromList(List.of(cards))
     }
 
-    def repoContainsOnlyCardsFromList(List<CardDto> cards) {
+    private boolean repoContainsOnlyCardsFromList(List<CardDto> cards) {
         return getAllUuidsFromRepoSorted() == getAllUuidsFromCardsListSorted(cards)
     }
 
-    def allCardsInRepoHaveGivenUpdateDate(LocalDate date) {
+    private void allCardsInRepoHaveGivenUpdateDate(LocalDate date) {
         repo.getAll().each { card ->
             assert (card.getLastUpdate().isEqual(date))
         }

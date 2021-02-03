@@ -1,6 +1,7 @@
 package com.brzn.box_eval.card.domain;
 
 import com.brzn.box_eval.card.port.CardJsonFileProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,15 +11,15 @@ import org.springframework.context.annotation.Configuration;
 class CardConfiguration {
 
     private final CardJsonFileProvider cardJsonFileProvider;
-    private final CardMapper cardMapper;
+    private final ObjectMapper mapper;
 
+    @Bean
     CardFacade cardFacade() {
         return cardFacade(new InMemoryCardRepository());
     }
 
-    @Bean
     CardFacade cardFacade(CardRepository repository) {
-        CardUpdater updater = new CardUpdater(repository, cardMapper, cardJsonFileProvider);
+        CardUpdater updater = new CardUpdater(repository, new CardMapper(mapper), cardJsonFileProvider);
         CardQuery provider = new CardQuery(repository);
         return new CardFacade(updater, provider);
     }

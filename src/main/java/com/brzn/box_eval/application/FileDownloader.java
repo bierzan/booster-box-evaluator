@@ -1,14 +1,16 @@
-package com.brzn.box_eval.adapter.card.provider;
+package com.brzn.box_eval.application;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 @Slf4j
-class FileDownloader { //todo wyniesc do innego pakietu
+@Component
+public class FileDownloader {
     public File getFileFromUrl(URL url, String path) {
         try {
             log.info("Downloading file from url {}", url.toString());

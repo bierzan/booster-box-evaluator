@@ -13,4 +13,6 @@ interface CardRepository {
     void updateAll(List<CardDto> cards);
 
     LocalDate findLastCardUpdateDate();
+
+    long save(CardDto cardDto);
 }

@@ -10,7 +10,7 @@ import static com.brzn.box_eval.card.domain.CardJsonTestUtil.*
 class CardMapperTest extends Specification {
     private File file
     private List<CardDto> cards
-    def cardMapper = new CardMapper(new ObjectMapper())
+    private CardMapper cardMapper = new CardMapper(new ObjectMapper())
 
     def cleanup() {
         deleteTemporaryJsons()

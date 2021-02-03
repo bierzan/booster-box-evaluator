@@ -1,7 +1,10 @@
 package com.brzn.box_eval.card.domain
 
+
+import com.brzn.box_eval.card.dto.CardDto
 import com.brzn.box_eval.card.port.CardJsonFileProvider
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.vavr.collection.List
 import spock.lang.Specification
 
 import java.time.LocalDate
@@ -9,14 +12,13 @@ import java.time.LocalDate
 import static com.brzn.box_eval.card.domain.CardJsonTestUtil.getBulkDataReferenceFile
 import static com.brzn.box_eval.card.domain.CardJsonTestUtil.mapJson2CardDtos
 
-
 class CardUpdaterTest extends Specification {
-    def fileProvider = Mock(CardJsonFileProvider)
-    def mapper = new CardMapper(new ObjectMapper())
-    def repository = Mock(CardRepository)
-    def updater = new CardUpdater(repository, mapper, fileProvider)
-    def referenceBulkDataFile = getBulkDataReferenceFile()
-    def cardsFromJsonFile = mapJson2CardDtos(referenceBulkDataFile)
+    private CardJsonFileProvider fileProvider = Mock(CardJsonFileProvider)
+    private CardMapper mapper = new CardMapper(new ObjectMapper())
+    private CardRepository repository = Mock(CardRepository)
+    private CardUpdater updater = new CardUpdater(repository, mapper, fileProvider)
+    private File referenceBulkDataFile = getBulkDataReferenceFile()
+    private List<CardDto> cardsFromJsonFile = mapJson2CardDtos(referenceBulkDataFile)
 
     def "should call update on card repository with recent cards"() {
         given:
@@ -48,11 +50,11 @@ class CardUpdaterTest extends Specification {
         0 * repository.updateAll(_)
     }
 
-    def stubGettingJsonFIle(File file) {
+    private void stubGettingJsonFIle(File file) {
         fileProvider.getCardsJsonFileReleasedAfter(_ as LocalDate) >> file
     }
 
-    def stubFindingLastCardUpdateDate(LocalDate date) {
+    private void stubFindingLastCardUpdateDate(LocalDate date) {
         repository.findLastCardUpdateDate() >> date
     }
 }

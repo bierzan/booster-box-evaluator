@@ -2,6 +2,7 @@ package com.brzn.box_eval.card.domain;
 
 import com.brzn.box_eval.card.dto.CardDto;
 import io.vavr.collection.List;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -25,6 +26,7 @@ class InMemoryCardRepository implements CardRepository {
     }
 
     @Override
+    @Transactional
     public void updateAll(List<CardDto> cards) {
         if (cards != null && cards.nonEmpty()) {
             cards.forEach(this::update);
@@ -42,13 +44,14 @@ class InMemoryCardRepository implements CardRepository {
     private long update(CardDto cardDto) {
         return cardInventory
                 .find(cardFromInventory -> cardFromInventory.refersTo(cardDto))
-                .map(cardFromInventory -> cardFromInventory.updateData(cardDto)) //todo weryfikacja czy zaktualizuje
+                .map(cardFromInventory -> cardFromInventory.updateData(cardDto))
                 .getOrElse(() -> {
                     cardDto.setLastUpdate(LocalDate.now());
                     return save(cardDto);
                 });
     }
 
+    @Override
     public long save(CardDto cardDto) {
         Card card = Card.builder()
                 .id(getNewId())

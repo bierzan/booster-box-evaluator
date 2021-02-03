@@ -4,11 +4,12 @@ import com.brzn.box_eval.box.port.CardSetPropertiesProvider;
 import com.brzn.box_eval.card.domain.CardFacade;
 import com.brzn.box_eval.infrastructure.client.Client;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 class CardSetPropertiesProviderConfiguration {
 
     private final CardFacade facade;
